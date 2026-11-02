@@ -120,7 +120,7 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
 
   const totalCards = SHOWCASE_ITEMS.length; // 10 cards
   const angleStep = 360 / totalCards; // 36 deg per card
-  const radius = 500; // 3D cylinder ring radius giving tight, snug gaps between cards
+  const radius = 620; // 3D cylinder ring radius giving crisp 1:1 pixel rendering at front
 
   // Drag interaction to spin ring manually
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -188,7 +188,7 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
             style={
               isDragging || manualAngle !== 0
                 ? {
-                    transform: `rotateX(-1.5deg) rotateY(${manualAngle}deg)`,
+                    transform: `translateZ(-${radius}px) rotateX(-1.5deg) rotateY(${manualAngle}deg)`,
                     animation: 'none',
                   }
                 : undefined

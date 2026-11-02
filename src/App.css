@@ -2186,8 +2186,8 @@ section[id] {
 
 /* 3D Rotating Ring */
 .curved-cylinder-ring {
-  width: 320px;
-  height: 220px;
+  width: 380px;
+  height: 250px;
   position: relative;
   transform-style: preserve-3d;
   animation: rotateCurvedPanorama 40s infinite linear;
@@ -2204,18 +2204,18 @@ section[id] {
 
 @keyframes rotateCurvedPanorama {
   from {
-    transform: rotateX(-1.5deg) rotateY(0deg);
+    transform: translateZ(-620px) rotateX(-1.5deg) rotateY(0deg);
   }
   to {
-    transform: rotateX(-1.5deg) rotateY(-360deg);
+    transform: translateZ(-620px) rotateX(-1.5deg) rotateY(-360deg);
   }
 }
 
 /* Each 3D Landscape Card */
 .curved-card-item {
   position: absolute;
-  width: 320px;
-  height: 220px;
+  width: 380px;
+  height: 250px;
   left: 0;
   top: 0;
   background: #0B0F19;
@@ -2226,10 +2226,13 @@ section[id] {
     0 8px 24px -4px rgba(5, 38, 77, 0.12),
     0 2px 8px -2px rgba(5, 38, 77, 0.06);
   backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .curved-card-item:hover {
@@ -2297,42 +2300,49 @@ section[id] {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px 14px 14px;
-  background: linear-gradient(180deg, transparent 0%, rgba(5, 22, 48, 0.75) 40%, rgba(5, 22, 48, 0.98) 100%);
+  padding: 26px 16px 14px;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 22, 48, 0.75) 35%, rgba(5, 22, 48, 0.98) 100%);
   display: flex;
   flex-direction: column;
   z-index: 2;
   pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(1px);
 }
 
 .curved-card-category {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #FFF000;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .curved-card-title {
-  font-size: 14.5px;
+  font-size: 15.5px;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0 0 3px;
+  margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: -0.2px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  -webkit-font-smoothing: antialiased;
 }
 
 .curved-card-specs {
-  font-size: 11px;
+  font-size: 12px;
   color: #E2E8F0;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-font-smoothing: antialiased;
 }
 
 .curved-panorama-floor-glow {
