@@ -2223,11 +2223,11 @@ section[id] {
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 
-    0 14px 32px rgba(5, 38, 77, 0.16),
-    0 3px 10px rgba(5, 38, 77, 0.08);
+    0 8px 24px -4px rgba(5, 38, 77, 0.12),
+    0 2px 8px -2px rgba(5, 38, 77, 0.06);
   backface-visibility: hidden !important;
   cursor: pointer;
-  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
 }
@@ -2235,8 +2235,8 @@ section[id] {
 .curved-card-item:hover {
   border-color: #FFF000;
   box-shadow: 
-    0 24px 48px rgba(5, 38, 77, 0.28),
-    0 6px 20px rgba(255, 240, 0, 0.25);
+    0 16px 36px -4px rgba(5, 38, 77, 0.16),
+    0 6px 14px -2px rgba(5, 38, 77, 0.08);
 }
 
 .curved-card-img-box {
