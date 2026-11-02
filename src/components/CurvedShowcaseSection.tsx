@@ -188,7 +188,7 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
             style={
               isDragging || manualAngle !== 0
                 ? {
-                    transform: `rotateX(-2.5deg) rotateY(${manualAngle}deg)`,
+                    transform: `rotateX(-1.5deg) rotateY(${manualAngle}deg)`,
                     animation: 'none',
                   }
                 : undefined
