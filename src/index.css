@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ==========================================================================
+   IKASLÉ Print Hub - Design System & Core Styles
+   ========================================================================== */
+
+:root {
+  /* Brand Color Palette */
+  --color-primary: #216FA3;
+  --color-primary-dark: #1A5A85;
+  --color-primary-light: #3182CE;
+  --color-navy: #05264D;
+  --color-navy-dark: #031833;
+  --color-navy-card: #0A3266;
+  --color-deep-blue: #003B70;
+  --color-electric-yellow: #FFF000;
+  --color-yellow-dark: #E6D800;
+  --color-yellow-muted: #FFF566;
+  --color-yellow-glow: rgba(255, 240, 0, 0.4);
+  --color-white: #FFFFFF;
+  --color-bg-light: #F5F8FC;
+  --color-bg-card: #FFFFFF;
+  
+  /* Text Colors */
+  --text-dark: #0A192F;
+  --text-body: #4A5568;
+  --text-muted: #718096;
+  --text-light: #F7FAFC;
+  --text-white: #FFFFFF;
+  
+  /* Border & Line Colors */
+  --border-light: #E2E8F0;
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-active: #216FA3;
+
+  /* Typography */
+  --font-main: 'Outfit', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-script: 'Caveat', cursive, sans-serif;
+
+  /* Spacing & Layout */
+  --container-max: 1280px;
+  --header-height: 80px;
+  --section-padding: 88px 0;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  /* Elevation & Shadows */
+  --shadow-sm: 0 2px 6px rgba(5, 38, 77, 0.05);
+  --shadow-md: 0 8px 24px rgba(5, 38, 77, 0.08);
+  --shadow-lg: 0 16px 40px rgba(5, 38, 77, 0.12);
+  --shadow-hover: 0 22px 48px rgba(5, 38, 77, 0.16);
+  --shadow-yellow-btn: 0 8px 20px rgba(255, 240, 0, 0.35);
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+}
+
+html {
+  font-family: var(--font-main);
+  color: var(--text-dark);
+  background-color: var(--color-white);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  line-height: 1.5;
+  font-size: 16px;
+  color: var(--text-dark);
+  background-color: var(--color-white);
+}
+
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #05264D;
+}
+::-webkit-scrollbar-thumb {
+  background: #216FA3;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FFF000;
+}
+
+/* Global Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+    padding: 0 32px;
+  }
+}
+
+/* Eyebrow / Category Tag */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+  background: #05264D;
+  color: #FFF000;
+  border: 1px solid #05264D;
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(5, 38, 77, 0.12);
+}
+
+.section-tag.light {
+  background: #05264D;
+  color: #FFF000;
+}
+
+.section-tag.yellow {
+  background: #05264D;
+  color: #FFF000;
+}
+
+.section-tag .tag-star {
+  color: #FFF000;
+  font-size: 14px;
+}
+
+/* Common Section Headings */
+.section-heading-dark {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--color-navy);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+
+.section-heading-white {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 800;
+  color: var(--color-white);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+
+.section-desc-dark {
+  font-size: 16px;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.section-desc-light {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* Buttons */
+.btn-yellow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--color-electric-yellow);
+  color: #05264D;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 26px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-electric-yellow);
+  cursor: pointer;
+  box-shadow: var(--shadow-yellow-btn);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-yellow:hover {
+  background-color: #E6D800;
+  border-color: #E6D800;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(255, 240, 0, 0.45);
+}
+
+.btn-yellow:active {
+  transform: translateY(0);
+}
+
+.btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: transparent;
+  color: var(--color-white);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 26px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-outline-white:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+.btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: transparent;
+  color: var(--color-navy);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid #CBD5E1;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-outline-dark:hover {
+  border-color: var(--color-navy);
+  background-color: #F8FAFC;
+  transform: translateY(-2px);
+}
+
+/* Arrow circle icon inside buttons and cards */
+.arrow-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--color-navy);
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.btn-yellow .arrow-circle {
+  background-color: var(--color-navy);
+  color: var(--color-electric-yellow);
+}
+
+/* Utility Animations */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-anim {
+  animation: floatSoft 5s ease-in-out infinite;
+}

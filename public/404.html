@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Out of Print | IKASLÉ Print Hub Coimbatore</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #03142B;
+        color: #FFFFFF;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+        padding: 32px 20px;
+      }
+
+      /* Ambient CMYK Spectrum Glows */
+      .bg-aurora {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .aurora-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.25;
+      }
+      .blob-cyan {
+        width: 480px;
+        height: 480px;
+        background: #00D2FF;
+        top: 10%;
+        left: -100px;
+      }
+      .blob-yellow {
+        width: 420px;
+        height: 420px;
+        background: #FFF000;
+        bottom: 10%;
+        right: -80px;
+      }
+      .blob-magenta {
+        width: 360px;
+        height: 360px;
+        background: #E91E8C;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.15;
+      }
+
+      /* Container Card */
+      .error-card {
+        position: relative;
+        z-index: 2;
+        max-width: 680px;
+        width: 100%;
+        background: rgba(5, 38, 77, 0.7);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        border-radius: 28px;
+        padding: 48px 36px;
+        text-align: center;
+        box-shadow: 0 25px 70px rgba(0, 10, 25, 0.6), 0 0 40px rgba(0, 210, 255, 0.12);
+      }
+
+      /* Brand Logo Header */
+      .logo-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 6px 16px;
+        border-radius: 999px;
+        margin-bottom: 24px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        font-size: 13px;
+        color: #FFFFFF;
+      }
+      .logo-pill span.star {
+        color: #FFF000;
+      }
+
+      /* Chromatic 404 Number */
+      .error-code-wrap {
+        position: relative;
+        display: inline-block;
+        margin: 10px 0 16px;
+      }
+      .error-code {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(84px, 16vw, 140px);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -4px;
+        color: #FFFFFF;
+        text-shadow: 
+          -3px -3px 0 #00D2FF,
+          3px 3px 0 #FFF000,
+          0 0 30px rgba(0, 210, 255, 0.5);
+      }
+
+      /* CMYK Color Spectrum Dots */
+      .cmyk-pills {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 18px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot.c { background: #00D2FF; box-shadow: 0 0 6px #00D2FF; }
+      .dot.m { background: #E91E8C; box-shadow: 0 0 6px #E91E8C; }
+      .dot.y { background: #FFF000; box-shadow: 0 0 6px #FFF000; }
+      .dot.k { background: #FFFFFF; box-shadow: 0 0 6px #FFFFFF; }
+      .cmyk-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #CBD5E1;
+        text-transform: uppercase;
+        margin-left: 4px;
+      }
+
+      .error-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(22px, 3.8vw, 32px);
+        font-weight: 800;
+        color: #FFFFFF;
+        margin-bottom: 14px;
+      }
+      .error-desc {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #CBD5E1;
+        max-width: 480px;
+        margin: 0 auto 32px;
+      }
+
+      /* Action Buttons */
+      .actions-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 13px 26px;
+        border-radius: 999px;
+        font-size: 14.5px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        font-family: inherit;
+      }
+      .btn-yellow {
+        background: #FFF000;
+        color: #05264D;
+        border: none;
+        box-shadow: 0 4px 18px rgba(255, 240, 0, 0.4);
+      }
+      .btn-yellow:hover {
+        background: #FFE600;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 240, 0, 0.55);
+      }
+      .btn-outline {
+        background: transparent;
+        color: #FFFFFF;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+      }
+      .btn-outline:hover {
+        border-color: #00D2FF;
+        color: #00D2FF;
+        background: rgba(0, 210, 255, 0.08);
+      }
+
+      /* Quick Links Row */
+      .quick-links-wrap {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        padding-top: 24px;
+      }
+      .quick-links-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #94A3B8;
+        margin-bottom: 14px;
+      }
+      .quick-links-grid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .quick-link-pill {
+        display: inline-block;
+        font-size: 12.5px;
+        color: #E2E8F0;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        padding: 6px 14px;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .quick-link-pill:hover {
+        background: rgba(0, 210, 255, 0.16);
+        border-color: #00D2FF;
+        color: #FFF000;
+      }
+
+      /* Footer note */
+      .error-footer {
+        margin-top: 24px;
+        font-size: 12px;
+        color: #64748B;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Gradient Glows -->
+    <div class="bg-aurora">
+      <div class="aurora-blob blob-cyan"></div>
+      <div class="aurora-blob blob-yellow"></div>
+      <div class="aurora-blob blob-magenta"></div>
+    </div>
+
+    <!-- 404 Content Card -->
+    <main class="error-card">
+      <div class="logo-pill">
+        <span>IKASLÉ PRINT HUB</span>
+        <span class="star">✦</span>
+        <span>COIMBATORE</span>
+      </div>
+
+      <div class="cmyk-pills">
+        <span class="dot c"></span>
+        <span class="dot m"></span>
+        <span class="dot y"></span>
+        <span class="dot k"></span>
+        <span class="cmyk-label">Offset Sheet Misaligned</span>
+      </div>
+
+      <div class="error-code-wrap">
+        <div class="error-code">404</div>
+      </div>
+
+      <h1 class="error-title">This Page is Out of Print</h1>
+      
+      <p class="error-desc">
+        The sheet you're looking for might have been trimmed off the guillotine, moved to another tray, or does not exist in our print catalog.
+      </p>
+
+      <div class="actions-row">
+        <a href="/" class="btn btn-yellow">
+          <span>← Back to Home</span>
+        </a>
+        <a href="/#coimbatore-printing" class="btn btn-outline">
+          <span>Coimbatore Printing Services</span>
+        </a>
+      </div>
+
+      <div class="quick-links-wrap">
+        <div class="quick-links-title">Popular Coimbatore Print Solutions</div>
+        <div class="quick-links-grid">
+          <a href="/#services" class="quick-link-pill">Visiting Cards</a>
+          <a href="/#services" class="quick-link-pill">Brochures & Flyers</a>
+          <a href="/#services" class="quick-link-pill">Packaging Boxes</a>
+          <a href="/#large-format" class="quick-link-pill">Signage & Banners</a>
+          <a href="/#sample-packs" class="quick-link-pill">Free Sample Packs</a>
+        </div>
+      </div>
+    </main>
+
+    <div class="error-footer">
+      © 2024 IKASLÉ Print Hub • Gandhipuram, Coimbatore, Tamil Nadu.
+    </div>
+  </body>
+</html>

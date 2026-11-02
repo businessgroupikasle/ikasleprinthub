@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow internal search and quote modal endpoints if queried directly
+Disallow: /api/
+Disallow: /admin/
+
+# Primary XML Sitemap for Google, Bing, Yahoo & DuckDuckGo
+Sitemap: https://ikasleprinthub.com/sitemap.xml

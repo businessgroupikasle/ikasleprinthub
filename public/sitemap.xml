@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage & Core Coimbatore Printing Hub -->
+  <url>
+    <loc>https://ikasleprinthub.com/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://ikasleprinthub.com/assets/images/sample_pack_banner_clean.png</image:loc>
+      <image:title>Best Printing Press in Coimbatore - IKASLÉ Print Hub</image:title>
+      <image:caption>Bestseller sample pack, visiting cards, brochures, packaging and signage printing in Coimbatore</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Coimbatore Printing Services Authority Hub -->
+  <url>
+    <loc>https://ikasleprinthub.com/#coimbatore-printing</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Complete Print Services Grid -->
+  <url>
+    <loc>https://ikasleprinthub.com/#services</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Free Bestseller Sample Packs -->
+  <url>
+    <loc>https://ikasleprinthub.com/#sample-packs</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Large Format Billboards & Outdoor Signage -->
+  <url>
+    <loc>https://ikasleprinthub.com/#large-format</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Featured Print Portfolio & Client Work -->
+  <url>
+    <loc>https://ikasleprinthub.com/#our-work</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Print Manufacturing Process & Technology -->
+  <url>
+    <loc>https://ikasleprinthub.com/#how-it-works</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Why Choose IKASLÉ Print Hub Coimbatore -->
+  <url>
+    <loc>https://ikasleprinthub.com/#why-choose</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Contact & Instant Quote Request -->
+  <url>
+    <loc>https://ikasleprinthub.com/#contact</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+</urlset>
