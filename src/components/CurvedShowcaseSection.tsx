@@ -48,7 +48,7 @@ const SHOWCASE_ITEMS: ShowcaseCard[] = [
     id: 'signage-1',
     title: 'LED Backlit Retail Signage',
     category: 'SIGNAGE & BANNERS',
-    image: '/assets/images/large_format_signage.jpg',
+    image: '/assets/images/cat_signage_banners.jpg',
     specs: 'Weatherproof UV • Aluminum Extrusion • Double-Sided',
     client: 'Monolith Design',
     turnaround: '4 Days',
