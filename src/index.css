@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
-
 /* ==========================================================================
    IKASLÉ Print Hub - Design System & Core Styles
    ========================================================================== */
@@ -82,6 +80,12 @@ body {
   font-size: 16px;
   color: var(--text-dark);
   background-color: var(--color-white);
+}
+
+/* Avoid a white flash before React mounts and the loading screen appears */
+#root:empty {
+  min-height: 100vh;
+  background: #031427;
 }
 
 section[id] {
@@ -308,4 +312,35 @@ a {
 
 .float-anim {
   animation: floatSoft 5s ease-in-out infinite;
+}
+
+/* Accessible Form Inputs & Validation States */
+.modal-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
+  font-size: 14px;
+  font-family: inherit;
+  color: #05264D;
+  background-color: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-form-input:focus {
+  border-color: #216FA3;
+  box-shadow: 0 0 0 3px rgba(33, 111, 163, 0.15);
+}
+
+.modal-form-input.input-error,
+.modal-form-input[aria-invalid="true"] {
+  border-color: #DC2626 !important;
+}
+
+.modal-form-input.input-error:focus,
+.modal-form-input[aria-invalid="true"]:focus {
+  border-color: #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;
 }

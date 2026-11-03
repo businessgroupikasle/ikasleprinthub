@@ -1,0 +1,405 @@
+/* ==========================================================================
+   LEGAL & CONTENT PAGES (Terms, Privacy Policy, FAQ)
+   Ikasle PrintHub - Coimbatore
+   ========================================================================== */
+
+.legal-page-wrapper {
+  min-height: 85vh;
+  padding: 120px 0 80px;
+  background-color: #F8FAFC;
+  color: #0A192F;
+}
+
+/* Page Hero Header Banner */
+.legal-hero-banner {
+  background: linear-gradient(135deg, #05264D 0%, #031833 100%);
+  border-radius: 20px;
+  padding: 44px 40px;
+  color: #FFFFFF;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(5, 38, 77, 0.12);
+}
+
+.legal-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255, 240, 0, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.legal-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #94A3B8;
+  margin-bottom: 16px;
+}
+
+.legal-breadcrumb button,
+.legal-breadcrumb a {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #FFF000;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legal-breadcrumb button:hover,
+.legal-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.legal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #FFF000;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.legal-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.legal-subtitle {
+  font-size: 15px;
+  color: #CBD5E1;
+  max-width: 720px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Two-column Layout for Legal Content */
+.legal-content-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Sidebar Navigation */
+.legal-sidebar {
+  position: sticky;
+  top: 100px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 20px rgba(5, 38, 77, 0.04);
+}
+
+.legal-sidebar-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #05264D;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.legal-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legal-sidebar-link {
+  font-size: 13.5px;
+  color: #64748B;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.legal-sidebar-link:hover,
+.legal-sidebar-link.active {
+  background-color: #F1F5F9;
+  color: #216FA3;
+  font-weight: 600;
+}
+
+/* Main Content Card */
+.legal-main-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 40px 44px;
+  box-shadow: 0 4px 20px rgba(5, 38, 77, 0.04);
+}
+
+.legal-section {
+  margin-bottom: 36px;
+  scroll-margin-top: 110px;
+}
+
+.legal-section:last-child {
+  margin-bottom: 0;
+}
+
+.legal-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #05264D;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legal-section-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #EFF6FF;
+  color: #216FA3;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.legal-section p {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.legal-section ul {
+  margin: 10px 0 16px 20px;
+  padding: 0;
+  color: #475569;
+}
+
+.legal-section li {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.legal-highlight-box {
+  background-color: #F0F9FF;
+  border-left: 4px solid #216FA3;
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #034275;
+}
+
+/* FAQ Interactive Accordion */
+.faq-search-wrapper {
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.faq-search-input {
+  width: 100%;
+  padding: 14px 20px 14px 46px;
+  border-radius: 12px;
+  border: 1px solid #CBD5E1;
+  font-size: 15px;
+  background-color: #FFFFFF;
+  color: #05264D;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.faq-search-input:focus {
+  border-color: #216FA3;
+  box-shadow: 0 0 0 3px rgba(33, 111, 163, 0.15);
+}
+
+.faq-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.faq-category-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.faq-pill {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #CBD5E1;
+  background-color: #FFFFFF;
+  color: #475569;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.faq-pill:hover,
+.faq-pill.active {
+  background-color: #05264D;
+  color: #FFFFFF;
+  border-color: #05264D;
+}
+
+.faq-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-accordion-item {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-accordion-item:hover {
+  border-color: #CBD5E1;
+}
+
+.faq-accordion-item.open {
+  border-color: #216FA3;
+  box-shadow: 0 4px 16px rgba(33, 111, 163, 0.08);
+}
+
+.faq-accordion-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 22px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.faq-question-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #05264D;
+  line-height: 1.4;
+}
+
+.faq-accordion-item.open .faq-question-text {
+  color: #216FA3;
+}
+
+.faq-chevron {
+  color: #64748B;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq-accordion-item.open .faq-chevron {
+  transform: rotate(180deg);
+  color: #216FA3;
+}
+
+.faq-accordion-body {
+  padding: 0 22px 20px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #475569;
+  border-top: 1px solid #F1F5F9;
+  padding-top: 14px;
+}
+
+/* Call to Action Box in Pages */
+.legal-cta-card {
+  margin-top: 40px;
+  background: #F8FAFC;
+  border: 1px dashed #CBD5E1;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.legal-cta-text h4 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #05264D;
+}
+
+.legal-cta-text p {
+  margin: 0;
+  font-size: 13.5px;
+  color: #64748B;
+}
+
+.legal-cta-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .legal-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legal-sidebar {
+    display: none; /* Hide sticky sidebar on mobile in favor of reading flow */
+  }
+
+  .legal-main-card {
+    padding: 28px 20px;
+  }
+
+  .legal-hero-banner {
+    padding: 32px 24px;
+  }
+}
+

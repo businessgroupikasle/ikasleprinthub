@@ -54,11 +54,11 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({ onBackHome, onOpenQu
           <div className="not-found-quick-links">
             <div className="quick-links-label">Popular Coimbatore Print Solutions:</div>
             <div className="quick-links-tags">
-              <a href="/#services" onClick={onBackHome} className="quick-tag">Visiting Cards</a>
-              <a href="/#services" onClick={onBackHome} className="quick-tag">Brochures & Flyers</a>
-              <a href="/#services" onClick={onBackHome} className="quick-tag">Packaging Boxes</a>
-              <a href="/#large-format" onClick={onBackHome} className="quick-tag">Signage & Banners</a>
-              <a href="/#sample-packs" onClick={onBackHome} className="quick-tag">Free Sample Packs</a>
+              <a href="/#services" onClick={(e) => { e.preventDefault(); onBackHome(); setTimeout(() => { const el = document.getElementById('services'); el?.scrollIntoView({ behavior: 'smooth' }); }, 50); }} className="quick-tag">Visiting Cards</a>
+              <a href="/#services" onClick={(e) => { e.preventDefault(); onBackHome(); setTimeout(() => { const el = document.getElementById('services'); el?.scrollIntoView({ behavior: 'smooth' }); }, 50); }} className="quick-tag">Brochures & Flyers</a>
+              <a href="/#services" onClick={(e) => { e.preventDefault(); onBackHome(); setTimeout(() => { const el = document.getElementById('services'); el?.scrollIntoView({ behavior: 'smooth' }); }, 50); }} className="quick-tag">Packaging Boxes</a>
+              <a href="/#large-format" onClick={(e) => { e.preventDefault(); onBackHome(); setTimeout(() => { const el = document.getElementById('large-format'); el?.scrollIntoView({ behavior: 'smooth' }); }, 50); }} className="quick-tag">Signage & Banners</a>
+              <a href="/#sample-packs" onClick={(e) => { e.preventDefault(); onBackHome(); setTimeout(() => { const el = document.getElementById('sample-packs'); el?.scrollIntoView({ behavior: 'smooth' }); }, 50); }} className="quick-tag">Free Sample Packs</a>
             </div>
           </div>
         </div>

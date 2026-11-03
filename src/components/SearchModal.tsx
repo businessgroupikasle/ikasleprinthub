@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, X, ArrowRight, ArrowUpRight } from 'lucide-react';
-import { serviceCategories } from './ServicesSection';
-import { portfolioItems } from './FeaturedWorkSection';
+import { serviceCategories } from '../data/servicesData';
+import { portfolioItems } from '../data/portfolioData';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -18,24 +18,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
+    if (!isOpen) return;
+    setTimeout(() => inputRef.current?.focus(), 50);
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

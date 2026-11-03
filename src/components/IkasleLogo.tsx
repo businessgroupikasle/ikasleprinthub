@@ -55,7 +55,7 @@ export const IkasleLogo: React.FC<LogoProps> = ({
           d="M 125 10 Q 128 14 132 14 Q 128 14 125 18 Q 122 14 118 14 Q 122 14 125 10 Z"
           fill={yellowAccent}
         />
-        <circle cx="125" cy="14" r="1.2" fill={isDarkTheme ? '#05264D' : '#FFFFFF'} />
+        <circle cx="125" cy="14" r="1.2" fill={isDarkTheme ? '#05264D' : isYellowBg ? '#FFF000' : '#FFFFFF'} />
 
         {/* Subtitle "Print Hub" with flanking flourishes */}
         {showTagline && (

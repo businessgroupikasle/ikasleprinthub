@@ -75,25 +75,54 @@ export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote 
           </p>
         </div>
 
-        {/* Machine Switcher Tabs */}
-        <div className="machinery-tabs-nav" role="tablist">
-          {machines.map((m, idx) => (
-            <button
-              key={m.id}
-              type="button"
-              onClick={() => setActiveTab(idx)}
-              className={`machinery-tab-btn ${activeTab === idx ? 'active' : ''}`}
-              role="tab"
-              aria-selected={activeTab === idx}
-            >
-              <span className="tab-pill-badge">{`0${idx + 1}`}</span>
-              <span className="tab-pill-name">{m.title.split(' ')[0]} {m.title.split(' ')[1]}</span>
-            </button>
-          ))}
+        {/* Equipment Selection Cards - Positioned Above Content for Intuitive Top-Down Flow */}
+        <div className="machinery-grid-row" role="tablist" aria-label="Equipment selection">
+          {machines.map((m, idx) => {
+            const isActive = activeTab === idx;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                id={`machinery-tab-${m.id}`}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`machinery-panel-${m.id}`}
+                tabIndex={isActive ? 0 : -1}
+                className={`machine-mini-card ${isActive ? 'active-mini' : ''}`}
+                onClick={() => setActiveTab(idx)}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    setActiveTab((idx + 1) % machines.length);
+                  } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    setActiveTab((idx - 1 + machines.length) % machines.length);
+                  }
+                }}
+              >
+                <div className="mini-card-thumb-wrap">
+                  <img src={m.image} alt={m.title} className="mini-card-thumb" loading="lazy" />
+                  <span className="mini-card-overlay-btn" aria-hidden="true">
+                    <Eye size={16} />
+                  </span>
+                </div>
+                <div className="mini-card-content">
+                  <span className="mini-card-cat">{m.category}</span>
+                  <h4 className="mini-card-title">{m.title}</h4>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Featured Active Machine Display Card */}
-        <div className="machinery-featured-card">
+        {/* Featured Active Machine Display Card - Displays Directly Below the Selection Cards */}
+        <div
+          id={`machinery-panel-${machines[activeTab].id}`}
+          role="tabpanel"
+          aria-labelledby={`machinery-tab-${machines[activeTab].id}`}
+          key={machines[activeTab].id}
+          className="machinery-featured-card"
+        >
           <div className="machinery-image-col">
             <div className="machine-img-container">
               <img
@@ -133,6 +162,7 @@ export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote 
 
             <div className="machine-cta-row">
               <button
+                type="button"
                 onClick={() => onOpenQuote(machines[activeTab].title)}
                 className="btn-yellow"
                 style={{ padding: '12px 24px' }}
@@ -142,28 +172,6 @@ export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote 
               </button>
             </div>
           </div>
-        </div>
-
-        {/* 3 Machine Thumbnail Grid Below */}
-        <div className="machinery-grid-row">
-          {machines.map((m, idx) => (
-            <div
-              key={m.id}
-              className={`machine-mini-card ${activeTab === idx ? 'active-mini' : ''}`}
-              onClick={() => setActiveTab(idx)}
-            >
-              <div className="mini-card-thumb-wrap">
-                <img src={m.image} alt={m.title} className="mini-card-thumb" loading="lazy" />
-                <span className="mini-card-overlay-btn">
-                  <Eye size={16} />
-                </span>
-              </div>
-              <div className="mini-card-content">
-                <span className="mini-card-cat">{m.category}</span>
-                <h4 className="mini-card-title">{m.title}</h4>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>

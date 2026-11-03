@@ -7,6 +7,7 @@ interface HeaderProps {
   onOpenSearch: () => void;
   activeNav: string;
   setActiveNav: (nav: string) => void;
+  onNavClick?: (href: string, label: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -14,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   activeNav,
   setActiveNav,
+  onNavClick,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,6 +62,11 @@ export const Header: React.FC<HeaderProps> = ({
   const handleNavClick = (href: string, label: string) => {
     setActiveNav(label);
     setMobileMenuOpen(false);
+
+    if (onNavClick) {
+      onNavClick(href, label);
+      return;
+    }
 
     if (window.location.pathname !== '/' && window.location.pathname !== '' && window.location.pathname !== '/index.html') {
       window.location.href = '/' + href;

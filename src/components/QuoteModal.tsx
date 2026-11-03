@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { X, CheckCircle, Upload, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { X, CheckCircle, Sparkles, ShieldCheck, ArrowRight, MessageCircle, Mail, Loader2, AlertCircle } from 'lucide-react';
+import {
+  getEmailError,
+  getNameError,
+  getPhoneError,
+  isValidEmail,
+  limitPhoneDigits,
+  normalizeName,
+  normalizePhone,
+  phoneFromPaste,
+} from '../utils/validation';
+import { formatFileSize } from '../utils/artwork';
+import { sendQuoteRequest } from '../utils/emailService';
+import { ArtworkUpload } from './ArtworkUpload';
+import { FieldError } from './FieldError';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -7,32 +21,71 @@ interface QuoteModalProps {
   initialService?: string;
 }
 
+const NOTHING_TOUCHED = { name: false, email: false, phone: false };
+
+// True for a paste, drop, autofill or any multi-character insert; false for ordinary one-key typing.
+const isBulkInput = (event: Event): boolean => {
+  if (!(event instanceof InputEvent)) return true; // browser autofill fires a plain "input" event
+  return (
+    event.inputType === 'insertFromPaste' ||
+    event.inputType === 'insertFromDrop' ||
+    event.inputType === 'insertReplacementText' ||
+    (event.data?.length ?? 0) > 1
+  );
+};
+
+const generateQuoteRef = () => 'IK-' + Math.floor(100000 + Math.random() * 900000);
+const getNowISO = () => new Date().toISOString();
+
 export const QuoteModal: React.FC<QuoteModalProps> = ({
   isOpen,
   onClose,
   initialService = 'Business Cards',
 }) => {
   const [selectedService, setSelectedService] = useState(initialService);
+
   const [quantity, setQuantity] = useState(500);
   const [material, setMaterial] = useState('400gsm Premium Silk');
   const [finish, setFinish] = useState('Soft-touch Matt Lamination');
   const [turnaround, setTurnaround] = useState('Standard (3-5 days)');
-  const [artworkFile, setArtworkFile] = useState<string | null>(null);
+  const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [submittedArtwork, setSubmittedArtwork] = useState<{ name: string; size: number } | null>(null);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [touched, setTouched] = useState(NOTHING_TOUCHED);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [quoteReference, setQuoteReference] = useState('');
+  const [submittedCustomer, setSubmittedCustomer] = useState('');
 
-  useEffect(() => {
-    if (initialService) {
-      setSelectedService(initialService);
-    }
-  }, [initialService]);
+  // Errors show when field is touched, attempted submit, or actively malformed
+  const nameError = (touched.name || /\d/.test(customerName)) ? getNameError(customerName) : '';
+  const isEmailMalformed = customerEmail.length > 0 && (
+    /\.[a-z0-9]*\d/i.test(customerEmail) ||
+    (customerEmail.includes('@') && customerEmail.slice(customerEmail.indexOf('@')).includes('.') && !isValidEmail(customerEmail))
+  );
+  const emailError = (touched.email || isEmailMalformed) ? getEmailError(customerEmail) : '';
+  const phoneError = touched.phone ? getPhoneError(customerPhone) : '';
+  const markTouched = (field: keyof typeof NOTHING_TOUCHED) =>
+    setTouched((prev) => ({ ...prev, [field]: true }));
+
+  const resetForm = useCallback(() => {
+    setCustomerName('');
+    setCustomerEmail('');
+    setCustomerPhone('');
+    setTouched(NOTHING_TOUCHED);
+    setArtworkFile(null);
+    setIsSubmitting(false);
+    setSubmitError(null);
+    setIsSubmitted(false);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') resetForm();
     };
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -44,55 +97,95 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, resetForm]);
 
   if (!isOpen) return null;
 
-  // Real-time dynamic price calculator
-  const calculatePrice = () => {
-    let base = 25;
-    if (selectedService.includes('Sample Pack')) return 0;
-    else if (selectedService.includes('Packaging')) base = 120;
-    else if (selectedService.includes('Signage') || selectedService.includes('Banners')) base = 85;
-    else if (selectedService.includes('Large Format') || selectedService.includes('Billboard')) base = 190;
-    else if (selectedService.includes('T-shirt')) base = 75;
-    else if (selectedService.includes('Gifts') || selectedService.includes('Mugs')) base = 45;
-    else if (selectedService.includes('Brochures')) base = 60;
-    else if (selectedService.includes('Stickers')) base = 35;
-
-    let finishMult = 1.0;
-    if (finish.includes('Foil')) finishMult = 1.35;
-    if (finish.includes('Spot UV')) finishMult = 1.25;
-    if (finish.includes('Soft-touch')) finishMult = 1.15;
-
-    let speedMult = 1.0;
-    if (turnaround.includes('24-48')) speedMult = 1.25;
-    if (turnaround.includes('Same Day')) speedMult = 1.5;
-
-    const unitDiscount = quantity >= 2500 ? 0.6 : quantity >= 1000 ? 0.75 : quantity >= 500 ? 0.85 : 1.0;
-    const est = Math.round((base * (quantity / 100) * unitDiscount * finishMult * speedMult) + 15);
-    return est;
-  };
-
-  const estimatedPrice = calculatePrice();
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ref = 'IK-' + Math.floor(100000 + Math.random() * 900000);
-    setQuoteReference(ref);
-    setIsSubmitted(true);
-  };
+    if (isSubmitting) return;
 
-  const resetForm = () => {
-    setIsSubmitted(false);
-    onClose();
+    setTouched({ name: true, email: true, phone: true });
+    setSubmitError(null);
+
+    const firstInvalidFieldId = [
+      { id: 'quote-name', error: getNameError(customerName) },
+      { id: 'quote-email', error: getEmailError(customerEmail) },
+      { id: 'quote-phone', error: getPhoneError(customerPhone) },
+    ].find((field) => field.error)?.id;
+    if (firstInvalidFieldId) {
+      document.getElementById(firstInvalidFieldId)?.focus();
+      return;
+    }
+    const cleanName = normalizeName(customerName);
+    const cleanEmail = customerEmail.trim();
+    const cleanPhone = normalizePhone(customerPhone);
+    const ref = generateQuoteRef();
+
+    setIsSubmitting(true);
+    try {
+      const response = await sendQuoteRequest({
+        quoteReference: ref,
+        customerName: cleanName,
+        customerEmail: cleanEmail,
+        customerPhone: cleanPhone,
+        selectedService,
+        quantity,
+        material,
+        finish,
+        turnaround,
+        artworkFile: artworkFile ? artworkFile.name : null,
+        artworkFileSize: artworkFile ? artworkFile.size : null,
+      });
+
+      if (!response.success) {
+        setSubmitError(response.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      setQuoteReference(ref);
+      setSubmittedCustomer(cleanName);
+      setSubmittedArtwork(artworkFile ? { name: artworkFile.name, size: artworkFile.size } : null);
+      try {
+        const existing = JSON.parse(localStorage.getItem('printhub_quotes') || '[]');
+        existing.unshift({
+          ref,
+          date: getNowISO(),
+          customerName: cleanName,
+          customerEmail: cleanEmail,
+          customerPhone: cleanPhone,
+          selectedService,
+          quantity,
+          material,
+          finish,
+          turnaround,
+          artworkFile: artworkFile?.name ?? null,
+          artworkFileSize: artworkFile?.size ?? null,
+        });
+        localStorage.setItem('printhub_quotes', JSON.stringify(existing.slice(0, 50)));
+      } catch {
+        // Local storage fallback
+      }
+      // Automatically reset customer input fields only after confirmation
+      setCustomerName('');
+      setCustomerEmail('');
+      setCustomerPhone('');
+      setTouched(NOTHING_TOUCHED);
+      setArtworkFile(null);
+      setIsSubmitted(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to dispatch quote request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div
       className="modal-backdrop"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) resetForm();
       }}
       style={{
         position: 'fixed',
@@ -135,7 +228,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFF000', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
               <Sparkles size={16} />
-              <span>Instant Print Quote Calculator</span>
+              <span>Custom Print Quote Request</span>
             </div>
             <h3 style={{ fontSize: '22px', fontWeight: 700, margin: '4px 0 0', color: '#FFFFFF' }}>
               Request a Custom Quote
@@ -183,7 +276,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               Quote Request Received!
             </h3>
             <p style={{ color: '#4A5568', fontSize: '16px', maxWidth: '480px', margin: '0 auto 24px', lineHeight: 1.6 }}>
-              Thank you, <strong>{customerName || 'Valued Client'}</strong>. Your quote request for <strong>{selectedService}</strong> has been logged under reference:
+              Thank you, <strong>{submittedCustomer || 'Valued Client'}</strong>. Your quote request for <strong>{selectedService}</strong> has been logged under reference:
             </p>
 
             <div
@@ -216,8 +309,8 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span>Estimated Total:</span>
-                <strong style={{ color: '#05264D', fontSize: '16px' }}>${estimatedPrice}.00 USD</strong>
+                <span>Category:</span>
+                <strong style={{ color: '#05264D' }}>{selectedService}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <span>Quantity & Finish:</span>
@@ -229,12 +322,63 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               </div>
             </div>
 
-            <button onClick={resetForm} className="btn-yellow" style={{ padding: '14px 32px' }}>
-              Done / Close
-            </button>
+            {submittedArtwork && (
+              <div
+                style={{
+                  backgroundColor: 'rgba(255, 240, 0, 0.14)',
+                  border: '1px solid rgba(230, 216, 0, 0.6)',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  maxWidth: '460px',
+                  margin: '0 auto 30px',
+                  textAlign: 'left',
+                  fontSize: '13.5px',
+                  color: '#05264D',
+                  lineHeight: 1.5,
+                }}
+              >
+                <strong style={{ wordBreak: 'break-all' }}>
+                  {submittedArtwork.name} ({formatFileSize(submittedArtwork.size)})
+                </strong>{' '}
+                was checked and is ready. Please send this file to us on WhatsApp or email, quoting{' '}
+                <strong>{quoteReference}</strong>, so our team can pre-flight it.
+              </div>
+            )}
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <a
+                href={`https://wa.me/917845132962?text=${encodeURIComponent(
+                  `Hello Ikasle PrintHub! I have requested Quote [${quoteReference}] for ${selectedService} (${quantity} units, ${finish}, turnaround: ${turnaround}). Client: ${submittedCustomer || 'Client'}.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-yellow"
+                style={{ padding: '12px 20px', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              >
+                <MessageCircle size={18} />
+                <span>Send via WhatsApp (+91 78451 32962)</span>
+              </a>
+
+              <a
+                href={`mailto:businessgroupikasle@gmail.com?subject=${encodeURIComponent(
+                  `Print Quote Request [${quoteReference}] - ${selectedService}`
+                )}&body=${encodeURIComponent(
+                  `Dear Ikasle PrintHub,\n\nPlease find my print quote request details below:\n\nReference: ${quoteReference}\nCategory: ${selectedService}\nQuantity: ${quantity} units\nMaterial: ${material}\nFinishing: ${finish}\nTurnaround: ${turnaround}\n\nClient Name: ${submittedCustomer}\n\nThank you!`
+                )}`}
+                className="btn-outline-dark"
+                style={{ padding: '12px 20px', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+              >
+                <Mail size={16} />
+                <span>Email Specs (businessgroupikasle@gmail.com)</span>
+              </a>
+
+              <button onClick={resetForm} className="btn-outline-dark" style={{ padding: '12px 20px' }}>
+                Done / Close
+              </button>
+            </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ padding: '28px' }}>
+          <form onSubmit={handleSubmit} noValidate style={{ padding: '28px' }}>
             {/* 1. Category Selection */}
             <div style={{ marginBottom: '22px' }}>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 700, color: '#05264D', marginBottom: '8px' }}>
@@ -399,83 +543,124 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               </div>
 
               {/* Upload Artwork Box */}
-              <div>
-                <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 700, color: '#05264D', marginBottom: '6px' }}>
-                  Artwork File (PDF, AI, PNG, PSD)
-                </label>
-                <div
-                  onClick={() => setArtworkFile('brand_artwork_final.pdf')}
-                  style={{
-                    border: '2px dashed #CBD5E1',
-                    borderRadius: '8px',
-                    padding: '20px 16px',
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    backgroundColor: artworkFile ? 'rgba(33, 111, 163, 0.05)' : '#FAFCFF',
-                    transition: 'border 0.2s ease',
-                  }}
-                >
-                  <Upload size={24} style={{ color: '#216FA3', margin: '0 auto 6px' }} />
-                  {artworkFile ? (
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#05264D' }}>{artworkFile}</div>
-                      <div style={{ fontSize: '11px', color: '#2E7D32', marginTop: '2px' }}>✓ File Attached (Ready for pre-flight)</div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#05264D' }}>Click to upload artwork</div>
-                      <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '2px' }}>or drag and drop your file here</div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ArtworkUpload file={artworkFile} onChange={setArtworkFile} />
             </div>
 
             {/* 4. Contact Details */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '20px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
+                <label htmlFor="quote-name" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
                   Your Full Name *
                 </label>
                 <input
+                  id="quote-name"
                   type="text"
+                  autoComplete="name"
                   required
-                  placeholder="e.g. Sarah Jenkins"
+                  placeholder="e.g. Ramesh Kumar"
                   value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px' }}
+                  onChange={(e) => {
+                    setCustomerName(e.target.value);
+                    if (isBulkInput(e.nativeEvent)) markTouched('name');
+                  }}
+                  onBlur={() => markTouched('name')}
+                  aria-invalid={!!nameError}
+                  aria-describedby={nameError ? 'quote-name-error' : undefined}
+                  className={`modal-form-input ${nameError ? 'input-error' : ''}`}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '6px',
+                    fontSize: '13.5px',
+                  }}
                 />
+                <FieldError id="quote-name-error" message={nameError} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
+                <label htmlFor="quote-email" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
                   Email Address *
                 </label>
                 <input
-                  type="email"
+                  id="quote-email"
+                  type="text"
+                  inputMode="email"
+                  autoComplete="email"
                   required
-                  placeholder="sarah@company.com"
+                  placeholder="ramesh@company.in"
                   value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px' }}
+                  onChange={(e) => {
+                    setCustomerEmail(e.target.value);
+                    if (isBulkInput(e.nativeEvent)) markTouched('email');
+                  }}
+                  onBlur={() => markTouched('email')}
+                  aria-invalid={!!emailError}
+                  aria-describedby={emailError ? 'quote-email-error' : undefined}
+                  className={`modal-form-input ${emailError ? 'input-error' : ''}`}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '6px',
+                    fontSize: '13.5px',
+                  }}
                 />
+                <FieldError id="quote-email-error" message={emailError} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
-                  Phone / WhatsApp
+                <label htmlFor="quote-phone" style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#05264D', marginBottom: '4px' }}>
+                  Phone / WhatsApp *
                 </label>
                 <input
+                  id="quote-phone"
                   type="tel"
-                  placeholder="+234 803 000 0000"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  required
+                  placeholder="10-digit mobile number"
                   value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '13.5px' }}
+                  // Digits only, max 10. (No maxLength attribute: it would cut a pasted "+91 98765…"
+                  // mid-number before we get the chance to strip the prefix.)
+                  onChange={(e) => {
+                    setCustomerPhone(
+                      isBulkInput(e.nativeEvent) ? phoneFromPaste(e.target.value) : limitPhoneDigits(e.target.value),
+                    );
+                    if (isBulkInput(e.nativeEvent)) markTouched('phone');
+                  }}
+                  onBlur={() => markTouched('phone')}
+                  aria-invalid={!!phoneError}
+                  aria-describedby={phoneError ? 'quote-phone-error' : undefined}
+                  className={`modal-form-input ${phoneError ? 'input-error' : ''}`}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '6px',
+                    fontSize: '13.5px',
+                  }}
                 />
+                <FieldError id="quote-phone-error" message={phoneError} />
               </div>
             </div>
 
-            {/* Live Estimation Bar & Submit Button */}
+            {submitError && (
+              <div
+                role="alert"
+                style={{
+                  backgroundColor: '#FEF2F2',
+                  border: '1px solid #FCA5A5',
+                  color: '#991B1B',
+                  padding: '10px 14px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <AlertCircle size={16} color="#DC2626" style={{ flexShrink: 0 }} />
+                <span>{submitError}</span>
+              </div>
+            )}
+
+            {/* Submit Action Bar */}
             <div
               style={{
                 backgroundColor: '#F5F8FC',
@@ -489,23 +674,31 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
                 border: '1px solid #E2E8F0',
               }}
             >
-              <div>
-                <div style={{ fontSize: '12px', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
-                  Estimated Live Price
-                </div>
-                <div style={{ fontSize: '28px', fontWeight: 800, color: '#05264D', lineHeight: 1.1 }}>
-                  ${estimatedPrice}
-                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#64748B', marginLeft: '4px' }}>.00 USD</span>
-                </div>
-                <div style={{ fontSize: '11.5px', color: '#216FA3', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                  <ShieldCheck size={14} />
-                  <span>Includes free digital proof & quality guarantee</span>
-                </div>
+              <div style={{ fontSize: '13px', color: '#216FA3', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <ShieldCheck size={18} />
+                <span>Includes free digital proof & Coimbatore delivery guarantee</span>
               </div>
 
-              <button type="submit" className="btn-yellow" style={{ padding: '13px 28px', fontSize: '15px' }}>
-                <span>Submit Quote Request</span>
-                <ArrowRight size={18} />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-yellow"
+                style={{
+                  padding: '13px 28px',
+                  fontSize: '15px',
+                  opacity: isSubmitting ? 0.75 : 1,
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <span>{isSubmitting ? 'Submitting...' : 'Submit Quote Request'}</span>
+                {isSubmitting ? (
+                  <Loader2 size={18} className="spin-animate" />
+                ) : (
+                  <ArrowRight size={18} />
+                )}
               </button>
             </div>
           </form>

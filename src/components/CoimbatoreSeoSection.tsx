@@ -8,45 +8,6 @@ interface CoimbatoreSeoSectionProps {
 export const CoimbatoreSeoSection: React.FC<CoimbatoreSeoSectionProps> = ({ onOpenQuote }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const serviceCategories = [
-    {
-      title: 'Business Card Printing Coimbatore',
-      keyword: 'Business Card Printing Coimbatore',
-      desc: '450 GSM velvet touch, metallic gold foil, spot UV embossed, and luxury visiting cards for Coimbatore entrepreneurs, doctors, and corporate executives.',
-      tag: 'Express Delivery',
-    },
-    {
-      title: 'Brochure Printing Coimbatore',
-      keyword: 'Brochure Printing Coimbatore',
-      desc: 'Tri-fold brochures, company profiles, and industrial product catalogues printed with rich CMYK color reproduction on premium art paper.',
-      tag: 'High-Volume Offset',
-    },
-    {
-      title: 'Flyer Printing Coimbatore',
-      keyword: 'Flyer Printing Coimbatore',
-      desc: 'Cost-effective, high-impact marketing flyers, leaflets, and promotional pamphlets for retail store launches, events, and brand campaigns.',
-      tag: 'Fast Turnaround',
-    },
-    {
-      title: 'Sticker Printing Coimbatore',
-      keyword: 'Sticker Printing Coimbatore',
-      desc: 'Waterproof vinyl stickers, die-cut product labels, roll stickers, barcode labels, and brand packaging decals with precision laser cutting.',
-      tag: 'Waterproof Vinyl',
-    },
-    {
-      title: 'Banner Printing Coimbatore',
-      keyword: 'Banner Printing Coimbatore',
-      desc: 'Durable outdoor flex banners, roll-up exhibition standees, vinyl backdrop banners, and storefront advertising with weather-resistant UV inks.',
-      tag: 'UV Weatherproof',
-    },
-    {
-      title: 'Corporate Printing Solutions Coimbatore',
-      keyword: 'Corporate Printing Solutions Coimbatore',
-      desc: 'Comprehensive corporate stationery packages including custom letterheads, presentation folders, envelopes, employee ID cards, and branded welcome kits.',
-      tag: 'Bulk B2B Rates',
-    },
-  ];
-
   const localities = [
     'Gandhipuram',
     'RS Puram',
@@ -134,28 +95,6 @@ export const CoimbatoreSeoSection: React.FC<CoimbatoreSeoSectionProps> = ({ onOp
               <div className="trust-title">Best Price & Quality Promise</div>
               <div className="trust-desc">Direct factory pricing with zero agent markups and 100% quality inspection.</div>
             </div>
-          </div>
-        </div>
-
-        {/* Coimbatore High-Intent Print Services Grid */}
-        <div className="seo-services-block">
-          <h3 className="seo-sub-heading">
-            Specialized Commercial & Digital Printing Solutions
-          </h3>
-
-          <div className="seo-services-grid">
-            {serviceCategories.map((item, index) => (
-              <div key={index} className="seo-service-card" onClick={() => onOpenQuote(item.title)}>
-                <div className="seo-card-badge">{item.tag}</div>
-                <h4 className="seo-card-title">{item.title}</h4>
-                <div className="seo-card-keyword">{item.keyword}</div>
-                <p className="seo-card-desc">{item.desc}</p>
-                <div className="seo-card-action">
-                  <span>Request Coimbatore Quote</span>
-                  <span className="arrow-sym">→</span>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
 

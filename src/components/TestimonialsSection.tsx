@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+import { Star, Building2, Coffee, Megaphone } from 'lucide-react';
 
 export const TestimonialsSection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -11,7 +11,7 @@ export const TestimonialsSection: React.FC = () => {
       author: 'Vertex Solutions',
       role: 'Corporate Client',
       avatarBg: '#111827',
-      avatarInitial: 'V',
+      AvatarIcon: Building2,
       rating: 5,
     },
     {
@@ -20,7 +20,7 @@ export const TestimonialsSection: React.FC = () => {
       author: 'Bison Café',
       role: 'Small Business Owner',
       avatarBg: '#2E7D32',
-      avatarInitial: '🌿',
+      AvatarIcon: Coffee,
       rating: 5,
     },
     {
@@ -29,7 +29,7 @@ export const TestimonialsSection: React.FC = () => {
       author: 'Nexora Marketing',
       role: 'Marketing Agency',
       avatarBg: '#05264D',
-      avatarInitial: 'N',
+      AvatarIcon: Megaphone,
       rating: 5,
     },
   ];
@@ -80,7 +80,7 @@ export const TestimonialsSection: React.FC = () => {
                   className="testimonial-avatar"
                   style={{ backgroundColor: item.avatarBg }}
                 >
-                  {item.avatarInitial}
+                  <item.AvatarIcon size={20} strokeWidth={2.2} aria-hidden="true" />
                 </div>
                 <div className="testimonial-meta">
                   <h4 className="testimonial-name">{item.author}</h4>

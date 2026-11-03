@@ -13,6 +13,7 @@ import { HowItWorksSection } from './components/HowItWorksSection';
 import { MachinerySection } from './components/MachinerySection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { BlogSection } from './components/BlogSection';
+import { CoimbatoreSeoSection } from './components/CoimbatoreSeoSection';
 import { CtaSection } from './components/CtaSection';
 import { Footer } from './components/Footer';
 import { QuoteModal } from './components/QuoteModal';
@@ -20,6 +21,31 @@ import { SearchModal } from './components/SearchModal';
 import { PortfolioModal } from './components/PortfolioModal';
 import { ContactModal } from './components/ContactModal';
 import { NotFoundPage } from './components/NotFoundPage';
+import { TermsPage } from './components/TermsPage';
+import { PrivacyPage } from './components/PrivacyPage';
+import { FaqPage } from './components/FaqPage';
+
+type PageRoute = 'home' | 'terms' | 'privacy' | 'faq' | '404';
+
+const getRouteFromPath = (path: string): PageRoute => {
+  const normalized = path.toLowerCase().replace(/\/+$/, '') || '/';
+  if (normalized === '/' || normalized === '/index.html') return 'home';
+  if (
+    normalized === '/terms' ||
+    normalized === '/terms-and-conditions' ||
+    normalized === '/terms-of-service' ||
+    normalized === '/terms-conditions'
+  ) {
+    return 'terms';
+  }
+  if (normalized === '/privacy' || normalized === '/privacy-policy') {
+    return 'privacy';
+  }
+  if (normalized === '/faq' || normalized === '/faqs') {
+    return 'faq';
+  }
+  return '404';
+};
 
 export const App: React.FC = () => {
   const [activeNav, setActiveNav] = useState('Home');
@@ -28,19 +54,28 @@ export const App: React.FC = () => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [selectedPortfolioItem, setSelectedPortfolioItem] = useState<PortfolioItem | null>(null);
-  const [isNotFound, setIsNotFound] = useState(() => {
-    const path = window.location.pathname;
-    return path === '/404' || (path !== '/' && path !== '' && path !== '/index.html');
-  });
+
+  const [currentRoute, setCurrentRoute] = useState<PageRoute>(() =>
+    getRouteFromPath(window.location.pathname)
+  );
 
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
-      setIsNotFound(path === '/404' || (path !== '/' && path !== '' && path !== '/index.html'));
+      setCurrentRoute(getRouteFromPath(window.location.pathname));
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  const navigateToPage = (path: string) => {
+    try {
+      window.history.pushState({}, '', path);
+    } catch {
+      // Ignore iframe restrictions if any
+    }
+    setCurrentRoute(getRouteFromPath(path));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleOpenQuote = (serviceName?: string) => {
     if (serviceName) {
@@ -62,7 +97,7 @@ export const App: React.FC = () => {
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -73,12 +108,33 @@ export const App: React.FC = () => {
   };
 
   const handleViewAllPortfolio = () => {
-    smoothScrollTo('our-work');
+    smoothScrollTo('curved-showcase');
     setActiveNav('Our Work');
   };
 
   const handleNavClick = (href: string, label: string) => {
     setActiveNav(label);
+
+    // If it is a full path (e.g. /terms, /privacy, /faq)
+    if (href.startsWith('/')) {
+      navigateToPage(href);
+      return;
+    }
+
+    // If user is currently on an inner page and clicks an anchor link
+    if (currentRoute !== 'home') {
+      try {
+        window.history.pushState({}, '', '/' + href);
+      } catch {}
+      setCurrentRoute('home');
+      setTimeout(() => {
+        const targetId = href.startsWith('#') ? href.slice(1) : href;
+        smoothScrollTo(targetId);
+      }, 80);
+      return;
+    }
+
+    // Standard on-page anchor navigation
     const targetId = href.startsWith('#') ? href.slice(1) : href;
     smoothScrollTo(targetId);
     try {
@@ -88,113 +144,105 @@ export const App: React.FC = () => {
     }
   };
 
-  if (isNotFound) {
-    return (
-      <div className="ikasle-app-wrapper">
-        <Header
-          activeNav={activeNav}
-          setActiveNav={setActiveNav}
-          onOpenQuote={() => handleOpenQuote()}
-          onOpenSearch={() => setSearchModalOpen(true)}
-        />
-        <NotFoundPage
-          onBackHome={() => {
-            window.history.pushState({}, '', '/');
-            setIsNotFound(false);
-          }}
-          onOpenQuote={() => {
-            window.history.pushState({}, '', '/');
-            setIsNotFound(false);
-            setQuoteModalOpen(true);
-          }}
-        />
-        <Footer
-          onNavClick={(href, label) => {
-            window.history.pushState({}, '', '/');
-            setIsNotFound(false);
-            handleNavClick(href, label);
-          }}
-        />
-        <QuoteModal
-          isOpen={quoteModalOpen}
-          onClose={() => setQuoteModalOpen(false)}
-          initialService={selectedServiceForQuote}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="ikasle-app-wrapper">
-      {/* 1. Sticky Navigation Header */}
+      {/* Sticky Navigation Header */}
       <Header
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         onOpenQuote={() => handleOpenQuote()}
         onOpenSearch={() => setSearchModalOpen(true)}
+        onNavClick={handleNavClick}
       />
 
-      <main>
-        {/* 2. Hero Section */}
-        <Hero
+      {/* Main Content Rendered According to Current Route */}
+      {currentRoute === 'terms' ? (
+        <TermsPage
+          onBackHome={() => navigateToPage('/')}
           onOpenQuote={() => handleOpenQuote()}
-          onExploreServices={handleExploreServices}
         />
-
-        {/* 3. "Complete Print Solutions for Every Business" (Services Grid) */}
-        <ServicesSection
-          onSelectService={handleSelectServiceFromCard}
-          onViewAll={handleExploreServices}
-        />
-
-        {/* 4. "Large Format Printing for a Bigger Impact" (Go Bigger) */}
-        <LargeFormatSection
-          onRequestLargeFormat={() => handleOpenQuote('Large Format Billboards')}
-        />
-
-        {/* 5. CENTER OF PAGE: 3D Curved Panoramic Ring Showcase (with 360° Animation) */}
-        <CurvedShowcaseSection
-          onSelectPortfolio={(item) => setSelectedPortfolioItem(item)}
-        />
-
-        {/* 6. "Print That Speaks for Itself" (Featured Work Grid) */}
-        <FeaturedWorkSection
-          onSelectPortfolio={(item) => setSelectedPortfolioItem(item)}
-          onViewAllPortfolio={handleViewAllPortfolio}
-        />
-
-        {/* 7. "SAMPLE PACKS - Discover our bestselling products" */}
-        <SamplePackSection
-          onOrderSamplePack={() => handleOpenQuote('Sample Pack (Free Bestseller Kit)')}
-        />
-
-        {/* 8. "Why Choose Ikaslé Print Hub?" */}
-        <WhyChooseSection />
-
-        {/* 7. "How It Works" (Simple Process) */}
-        <HowItWorksSection />
-
-        {/* 8. "HEAVY-DUTY INFRASTRUCTURE" (Printing Machines Showcase) */}
-        <MachinerySection onOpenQuote={handleOpenQuote} />
-
-        {/* 9. "Trusted by Businesses Like Yours" (Client Stories) */}
-        <TestimonialsSection />
-
-        {/* 10. "Print Knowledge Hub & Blog" (Insights, Guides & Tips) */}
-        <BlogSection />
-
-        {/* 10. "Let's Bring Your Ideas to Print" (CTA Banner) */}
-        <CtaSection
+      ) : currentRoute === 'privacy' ? (
+        <PrivacyPage
+          onBackHome={() => navigateToPage('/')}
           onOpenQuote={() => handleOpenQuote()}
-          onOpenContact={() => setContactModalOpen(true)}
         />
-      </main>
+      ) : currentRoute === 'faq' ? (
+        <FaqPage
+          onBackHome={() => navigateToPage('/')}
+          onOpenQuote={(service) => handleOpenQuote(service)}
+        />
+      ) : currentRoute === '404' ? (
+        <NotFoundPage
+          onBackHome={() => navigateToPage('/')}
+          onOpenQuote={() => handleOpenQuote()}
+        />
+      ) : (
+        <main>
+          {/* 1. Hero Section */}
+          <Hero
+            onOpenQuote={() => handleOpenQuote()}
+            onExploreServices={handleExploreServices}
+          />
 
-      {/* 10. Footer */}
+          {/* 2. Services Grid */}
+          <ServicesSection
+            onSelectService={handleSelectServiceFromCard}
+            onViewAll={handleExploreServices}
+          />
+
+          {/* 3. Large Format Printing */}
+          <LargeFormatSection
+            onRequestLargeFormat={() => handleOpenQuote('Large Format Billboards')}
+          />
+
+          {/* 4. 3D Curved Panoramic Ring Showcase */}
+          <CurvedShowcaseSection
+            onSelectPortfolio={(item) => setSelectedPortfolioItem(item)}
+          />
+
+          {/* 5. Featured Work Grid */}
+          <FeaturedWorkSection
+            onSelectPortfolio={(item) => setSelectedPortfolioItem(item)}
+            onViewAllPortfolio={handleViewAllPortfolio}
+          />
+
+          {/* 6. Sample Packs */}
+          <SamplePackSection
+            onOrderSamplePack={() => handleOpenQuote('Sample Pack (Free Bestseller Kit)')}
+          />
+
+          {/* 7. Why Choose Ikaslé Print Hub */}
+          <WhyChooseSection />
+
+          {/* 8. How It Works */}
+          <HowItWorksSection />
+
+          {/* 9. Machinery & Infrastructure */}
+          <MachinerySection onOpenQuote={handleOpenQuote} />
+
+          {/* 10. Client Stories */}
+          <TestimonialsSection />
+
+          {/* 11. Coimbatore Local SEO & Key Authority */}
+          <CoimbatoreSeoSection onOpenQuote={handleOpenQuote} />
+
+          {/* 12. Print Knowledge Hub & Blog */}
+          <BlogSection />
+
+          {/* 13. CTA Banner */}
+          <CtaSection
+            onOpenQuote={() => handleOpenQuote()}
+            onOpenContact={() => setContactModalOpen(true)}
+          />
+        </main>
+      )}
+
+      {/* Persistent Footer across all pages */}
       <Footer onNavClick={handleNavClick} />
 
-      {/* Interactive Modals */}
+      {/* Global Interactive Modals (Available from any page) */}
       <QuoteModal
+        key={selectedServiceForQuote}
         isOpen={quoteModalOpen}
         onClose={() => setQuoteModalOpen(false)}
         initialService={selectedServiceForQuote}

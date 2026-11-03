@@ -1,0 +1,62 @@
+.artwork-dropzone {
+  border: 2px dashed #CBD5E1;
+  border-radius: 8px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #FAFCFF;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.artwork-dropzone:hover {
+  border-color: #216FA3;
+}
+
+.artwork-dropzone:focus-visible {
+  outline: 2px solid #216FA3;
+  outline-offset: 2px;
+}
+
+.artwork-dropzone.has-file {
+  background-color: rgba(33, 111, 163, 0.05);
+}
+
+.artwork-dropzone.is-dragging {
+  border-color: #216FA3;
+  background-color: rgba(33, 111, 163, 0.12);
+}
+
+.artwork-dropzone.has-error {
+  border-color: #DC2626;
+}
+
+.artwork-action {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #216FA3;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.artwork-action:hover {
+  color: #05264D;
+}
+
+.artwork-action.danger {
+  color: #DC2626;
+}
+
+.artwork-spinner {
+  animation: artworkSpin 0.9s linear infinite;
+}
+
+@keyframes artworkSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork-spinner { animation: none; }
+}

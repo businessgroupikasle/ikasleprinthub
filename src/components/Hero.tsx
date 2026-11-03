@@ -119,13 +119,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenQuote, onExploreServices }) =>
                 <span className="cmyk-dot yellow" />
                 <span className="cmyk-dot black" />
               </div>
-              <span className="eyebrow-item">PRINTING</span>
+              <span className="eyebrow-item cyan">PRINTING</span>
               <span className="eyebrow-dot">•</span>
-              <span className="eyebrow-item">BRANDING</span>
+              <span className="eyebrow-item magenta">BRANDING</span>
               <span className="eyebrow-dot">•</span>
-              <span className="eyebrow-item">SIGNAGE</span>
+              <span className="eyebrow-item yellow">SIGNAGE</span>
               <span className="eyebrow-dot">•</span>
-              <span className="eyebrow-item">CUSTOM SOLUTIONS</span>
+              <span className="eyebrow-item key">CUSTOM SOLUTIONS</span>
             </div>
 
             {/* Main Headline (Optimized Single H1 for Coimbatore Printing Services SEO) */}

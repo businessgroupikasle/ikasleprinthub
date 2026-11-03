@@ -111,7 +111,6 @@ export const BlogSection: React.FC = () => {
             <article
               key={post.id}
               className="blog-card"
-              onClick={() => setSelectedPost(post)}
               style={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: '20px',
@@ -120,7 +119,6 @@ export const BlogSection: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 position: 'relative'
               }}
@@ -194,36 +192,17 @@ export const BlogSection: React.FC = () => {
                   ))}
                 </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingTop: '16px',
-                    borderTop: '1px solid #E2E8F0',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    color: '#05264D'
-                  }}
+                <button
+                  type="button"
+                  onClick={() => setSelectedPost(post)}
+                  className="blog-read-more-btn"
+                  aria-label={`Read full article: ${post.title}`}
                 >
                   <span>Read Full Article</span>
-                  <div
-                    className="blog-arrow-circle"
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      backgroundColor: '#FFF000',
-                      color: '#0A111A',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'transform 0.2s ease'
-                    }}
-                  >
+                  <div className="blog-arrow-circle" aria-hidden="true">
                     <ArrowUpRight size={16} strokeWidth={2.4} />
                   </div>
-                </div>
+                </button>
               </div>
             </article>
           ))}
