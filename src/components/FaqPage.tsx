@@ -31,7 +31,7 @@ const FAQ_LIST: FaqItem[] = [
     answer: (
       <>
         <p>
-          <strong>Ikasle PrintHub</strong> is widely recognized as one of the premier commercial printing presses in Coimbatore, Tamil Nadu. Located at Hopes (Avinashi Road corridor), our facility operates high-speed Heidelberg offset presses for volume runs and high-precision Konica Minolta digital presses for short-run express marketing collateral.
+          <strong>Ikasle PrintHub</strong> is widely recognized as one of the premier commercial printing and corporate branding partners in Coimbatore, Tamil Nadu. Located at Hopes (Avinashi Road corridor), our team delivers high-capacity offset printing for bulk volume runs and high-precision digital printing for short-run express marketing collateral.
         </p>
         <p>
           We specialize in luxury visiting cards, brochures, product packaging boxes, roll-up exhibition standees, and custom stickers for over 4,000+ corporate clients, manufacturers, and colleges across Coimbatore, Tiruppur, and Erode.

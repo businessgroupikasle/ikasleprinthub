@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { Star, Building2, Coffee, Megaphone } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Star, Building2, Coffee, Megaphone, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const TestimonialsSection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
 
   const testimonials = [
     {
@@ -34,6 +39,97 @@ export const TestimonialsSection: React.FC = () => {
     },
   ];
 
+  const scrollToSlide = (idx: number) => {
+    setActiveSlide(idx);
+    if (!carouselRef.current) return;
+    const container = carouselRef.current;
+    const cards = container.children;
+    if (cards[idx]) {
+      const card = cards[idx] as HTMLElement;
+      const targetScroll = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
+      container.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleScroll = useCallback(() => {
+    if (!carouselRef.current) return;
+    const container = carouselRef.current;
+    const scrollCenter = container.scrollLeft + container.offsetWidth / 2;
+    const children = Array.from(container.children) as HTMLElement[];
+
+    let closestIdx = 0;
+    let minDistance = Infinity;
+
+    children.forEach((child, idx) => {
+      const childCenter = child.offsetLeft + child.offsetWidth / 2;
+      const distance = Math.abs(scrollCenter - childCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIdx = idx;
+      }
+    });
+
+    setActiveSlide(closestIdx);
+  }, []);
+
+  const handlePrev = () => {
+    const nextIdx = (activeSlide - 1 + testimonials.length) % testimonials.length;
+    scrollToSlide(nextIdx);
+  };
+
+  const handleNext = () => {
+    const nextIdx = (activeSlide + 1) % testimonials.length;
+    scrollToSlide(nextIdx);
+  };
+
+  // Drag-to-scroll support for desktop simulation & mice
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!carouselRef.current) return;
+    isDraggingRef.current = true;
+    startXRef.current = e.pageX - carouselRef.current.offsetLeft;
+    scrollLeftRef.current = carouselRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.4;
+    carouselRef.current.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isDraggingRef.current = false;
+  };
+
+  // Subtle auto-advance on mobile when not interacting
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      if (window.innerWidth <= 860) {
+        setActiveSlide((prev) => {
+          const next = (prev + 1) % testimonials.length;
+          if (carouselRef.current) {
+            const container = carouselRef.current;
+            const cards = container.children;
+            if (cards[next]) {
+              const card = cards[next] as HTMLElement;
+              const targetScroll = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
+              container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+            }
+          }
+          return next;
+        });
+      }
+    }, 6000);
+
+    return () => clearInterval(timer);
+  }, [isPaused, testimonials.length]);
+
   return (
     <section id="client-stories" className="testimonials-section" style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Background with geometric angles */}
@@ -41,7 +137,7 @@ export const TestimonialsSection: React.FC = () => {
 
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         {/* Section Header */}
-        <div className="testimonials-header" style={{ marginBottom: '48px' }}>
+        <div className="testimonials-header" style={{ marginBottom: '40px' }}>
           <div className="section-tag yellow">
             <span className="tag-star">✦</span>
             <span>CLIENT STORIES</span>
@@ -56,12 +152,22 @@ export const TestimonialsSection: React.FC = () => {
           </p>
         </div>
 
-        {/* 3 Testimonial Cards */}
-        <div className="testimonials-grid">
+        {/* Testimonials Carousel / Grid */}
+        <div
+          ref={carouselRef}
+          onScroll={handleScroll}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setTimeout(() => setIsPaused(false), 4000)}
+          className="testimonials-grid"
+        >
           {testimonials.map((item, idx) => (
             <div
               key={item.id}
-              onClick={() => setActiveSlide(idx)}
+              onClick={() => scrollToSlide(idx)}
               className={`testimonial-card ${activeSlide === idx ? 'card-active' : ''}`}
             >
               {/* 5 Yellow Stars */}
@@ -91,18 +197,41 @@ export const TestimonialsSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Carousel Indicator Dots */}
-        <div className="testimonials-dots-row">
-          {testimonials.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveSlide(idx)}
-              className={`t-dot ${activeSlide === idx ? 'active' : ''}`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
+        {/* Carousel Controls (Arrows + Indicator Dots) */}
+        <div className="testimonials-carousel-controls">
+          <button
+            type="button"
+            className="carousel-arrow-btn prev-btn"
+            onClick={handlePrev}
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          <div className="testimonials-dots-row">
+            {testimonials.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => scrollToSlide(idx)}
+                className={`t-dot ${activeSlide === idx ? 'active' : ''}`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="carousel-arrow-btn next-btn"
+            onClick={handleNext}
+            aria-label="Next testimonial"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
       </div>
     </section>
   );
 };
+
+export default TestimonialsSection;

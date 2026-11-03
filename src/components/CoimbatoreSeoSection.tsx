@@ -26,7 +26,7 @@ export const CoimbatoreSeoSection: React.FC<CoimbatoreSeoSectionProps> = ({ onOp
   const faqs = [
     {
       q: 'Which is the best printing press in Coimbatore for commercial and offset printing?',
-      a: 'IKASLÉ Print Hub is recognized as one of the premier printing presses in Coimbatore, equipped with high-speed Heidelberg offset presses, Konica Minolta production digital printers, and computerized thermal roll laminators. We serve thousands of corporate clients, engineering manufacturers, textile exporters, and retail businesses across Coimbatore.',
+      a: 'IKASLÉ Print Hub is recognized as one of the premier commercial printing partners in Coimbatore, delivering end-to-end commercial offset printing, high-speed digital printing, and specialized post-press finishing. We serve thousands of corporate clients, engineering manufacturers, textile exporters, and retail businesses across Coimbatore.',
     },
     {
       q: 'Do you provide same-day or 24-hour express printing in Coimbatore?',
@@ -72,7 +72,7 @@ export const CoimbatoreSeoSection: React.FC<CoimbatoreSeoSectionProps> = ({ onOp
               <Printer size={22} />
             </div>
             <div>
-              <div className="trust-title">Heidelberg Offset & Digital</div>
+              <div className="trust-title">Commercial Offset & Digital</div>
               <div className="trust-desc">Micron-accurate 2400 DPI CMYK spectrophotometer color calibration.</div>
             </div>
           </div>

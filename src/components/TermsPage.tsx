@@ -79,7 +79,7 @@ export const TermsPage: React.FC<TermsPageProps> = ({ onBackHome, onOpenQuote })
                 <span>Print Specifications, Artwork & Proofing</span>
               </h2>
               <p>
-                To ensure high-definition print quality on our Heidelberg offset and Konica Minolta digital presses, client artwork must meet the following standard industry prepress guidelines:
+                To ensure high-definition print quality across our commercial offset and digital production runs, client artwork must meet the following standard industry prepress guidelines:
               </p>
               <ul>
                 <li><strong>Resolution:</strong> Minimum 300 DPI at 100% final physical print scale.</li>

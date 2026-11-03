@@ -2485,11 +2485,23 @@ section[id] {
   color: #64748B;
 }
 
+.testimonials-carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 36px;
+}
+
 .testimonials-dots-row {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
-  margin-top: 36px;
+}
+
+.carousel-arrow-btn {
+  display: none;
 }
 
 .t-dot {
@@ -2515,7 +2527,57 @@ section[id] {
 
 @media (max-width: 860px) {
   .testimonials-grid {
-    grid-template-columns: 1fr;
+    display: flex !important;
+    grid-template-columns: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 10px 16px 20px;
+    margin: 0 -16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-padding: 0 16px;
+  }
+
+  .testimonials-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 85%;
+    max-width: 85%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  .carousel-arrow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
+    color: #05264D;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(5, 38, 77, 0.08);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .carousel-arrow-btn:active {
+    transform: scale(0.92);
+    background: #FFF000;
+    border-color: #FFF000;
+  }
+
+  .testimonials-carousel-controls {
+    margin-top: 20px;
   }
 }
 
@@ -3923,9 +3985,6 @@ html, body, #root, .ikasle-app-wrapper {
 
 /* Tablets (600px - 820px) */
 @media (max-width: 820px) {
-  .testimonials-grid {
-    grid-template-columns: 1fr;
-  }
   .cta-banner-card {
     flex-direction: column;
   }

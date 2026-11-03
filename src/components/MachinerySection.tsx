@@ -1,58 +1,64 @@
 import React, { useState } from 'react';
-import { Cpu, Zap, Eye, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Sparkles, Zap, Eye, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface MachinerySectionProps {
-  onOpenQuote: (machineName?: string) => void;
+  onOpenQuote: (serviceName?: string) => void;
 }
 
 export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote }) => {
   const [activeTab, setActiveTab] = useState(0);
 
-  const machines = [
+  const capabilities = [
     {
-      id: 'heidelberg',
-      title: 'Heidelberg Speedmaster 5-Color Offset Press',
-      category: 'CORE OFFSET PRODUCTION',
+      id: 'commercial-offset',
+      title: 'Commercial Offset & Bulk Printing Services',
+      category: 'HIGH-VOLUME COMMERCIAL SERVICES',
       image: '/assets/images/machine_heidelberg_offset.jpg',
-      badge: '15,000 Sheets / Hr',
-      desc: 'Our flagship German Heidelberg 5-color offset press delivers unmatched color vibrancy and sharp typography with real-time in-line spectrophotometer scanning.',
+      badge: 'Bulk Volume & Cost Efficiency',
+      desc: 'End-to-end commercial printing services tailored for corporate collateral, product catalogues, brochures, and custom packaging. We manage complete pre-press proofing, color calibration, and bulk finishing with maximum cost efficiency for your business.',
       specs: [
-        '2400 DPI Micron Thermal CTP Laser Plates',
-        'Automatic Ink Agitation & Spectrophotometer Control',
-        'Handles 80 GSM Paper to 450 GSM Heavy Board',
-        'Pantone Matching & Metallic Ink Integration',
+        'Comprehensive Pre-flight File Review & CTP Color Proofing',
+        'Vibrant CMYK & Exact Pantone Color Consistency at Scale',
+        'Curated Paper Stock Advisory (80 GSM Bond to 450 GSM Heavy Board)',
+        'Premium Post-Press Finishes: Spot UV, Gold Foiling & Thermal Lamination',
       ],
-      idealFor: 'Bulk visiting cards, product catalogues, corporate brochures, and luxury packaging.',
+      idealFor: 'Bulk visiting cards, product catalogues, corporate brochures, annual reports, and custom rigid packaging.',
+      quoteService: 'Brochures & Flyers',
+      ctaText: 'Request Offset Quote',
     },
     {
-      id: 'uv-large-format',
-      title: 'SpectraJet Pro 3200 UV-LED Hybrid System',
-      category: 'INDUSTRIAL SIGNAGE & BANNERS',
+      id: 'uv-signage',
+      title: 'Large Format Signage & Brand Display Solutions',
+      category: 'SIGNAGE & EVENT BRANDING SERVICES',
       image: '/assets/images/machine_large_format_uv.jpg',
-      badge: '3.2 Meter Seamless Bed',
-      desc: 'Heavy-duty industrial UV flatbed and roll-to-roll printing powerhouse engineered for weatherproof banners, architectural signage, and exhibition displays.',
+      badge: 'Weatherproof & High-Impact',
+      desc: 'Turnkey display and signage fabrication services for retail storefronts, corporate office interiors, and major exhibitions like CODISSIA. From substrate recommendation to vibrant UV printing and custom mounting, we deliver ready-to-install visual branding.',
       specs: [
-        'Instant UV-LED Curing (Scratch & Fade Proof)',
-        'Direct-to-Substrate: Acrylic, Foam Board, Canvas & Vinyl',
-        'Double-Sided Day & Night Backlit Illumination Quality',
-        '5-Year UV Outdoor Durability Guarantee',
+        'Direct-to-Substrate UV Printing: Acrylic, Sunboard, Foam Sheet & Canvas',
+        'Weatherproof, UV-Resistant & Scratch-Proof Outdoor Durability',
+        'Seamless Extra-Wide Banners, Backlit Glow Signs & Roll-Up Standees',
+        'Complete Dimension Planning, Fabrication & Installation Guidance',
       ],
-      idealFor: 'CODISSIA exhibition stalls, billboard flex banners, roll-up standees, and retail store LED boards.',
+      idealFor: 'CODISSIA exhibition stalls, billboard flex banners, retail showroom branding, and roll-up standees.',
+      quoteService: 'Signage & Banners',
+      ctaText: 'Request Signage Quote',
     },
     {
-      id: 'digital-press',
-      title: 'High-Speed Production Digital Press & Hydraulic Cutter',
-      category: 'RUSH & SHORT RUN PRINTING',
+      id: 'express-digital',
+      title: 'Express Digital Printing & Short-Run Solutions',
+      category: 'ON-DEMAND & EXPRESS PRINT SERVICES',
       image: '/assets/images/machine_digital_press.jpg',
-      badge: 'Same-Day Dispatch',
-      desc: 'Advanced digital toner press paired with computerized programmable hydraulic guillotines for express turnaround without any minimum order quantities.',
+      badge: 'Zero MOQ • Same-Day Dispatch',
+      desc: 'Agile, on-demand digital printing services built for urgent business timelines, event collaterals, prototypes, and targeted marketing campaigns without any minimum order restrictions or lengthy setup delays.',
       specs: [
-        'Automated Color Calibration with Zero Set-Up Delay',
-        'Variable Data Printing (Numbered Coupons, Barcodes, QR Codes)',
-        'Hydraulic Micro-Cut Accuracy to 0.1 Millimeter',
-        'Same-Day Delivery across Coimbatore Zones',
+        'Same-Day Delivery & Rapid Dispatch across Coimbatore Zones',
+        'Zero Minimum Order Quantity (Zero MOQ) — Print Only What You Need',
+        'Variable Data Printing (VDP) for Serialized Cards, QR Codes & Names',
+        'Computerized Micro-Cut Accuracy to 0.1mm with Custom Folding & Creasing',
       ],
-      idealFor: 'Same-day visiting cards, marketing flyers, event invitations, and serialized product labels.',
+      idealFor: 'Same-day visiting cards, marketing flyers, corporate event invitations, serialized labels, and launch materials.',
+      quoteService: 'Business Cards',
+      ctaText: 'Request Express Quote',
     },
   ];
 
@@ -62,91 +68,91 @@ export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote 
         {/* Section Header */}
         <div className="machinery-header">
           <div className="section-tag yellow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <Cpu size={16} />
-            <span>HEAVY-DUTY INFRASTRUCTURE</span>
+            <Sparkles size={16} />
+            <span>FULL-SERVICE PRINT SOLUTIONS</span>
           </div>
 
           <h2 className="machinery-title">
-            Our Advanced Industrial Printing Machinery
+            Our End-to-End Print Service Capabilities
           </h2>
 
           <p className="machinery-lead">
-            We invest in world-class German offset presses and high-resolution industrial UV technology to guarantee unmatched precision, rich CMYK color depth, and rapid delivery across Coimbatore.
+            As a trusted service-based printing partner in Coimbatore, we handle your entire project lifecycle—from artwork pre-flight audit and material advisory to precision production, bespoke finishing, and doorstep delivery.
           </p>
         </div>
 
-        {/* Equipment Selection Cards - Positioned Above Content for Intuitive Top-Down Flow */}
-        <div className="machinery-grid-row" role="tablist" aria-label="Equipment selection">
-          {machines.map((m, idx) => {
+        {/* Service Capability Selection Cards */}
+        <div className="machinery-grid-row" role="tablist" aria-label="Service capability selection">
+          {capabilities.map((c, idx) => {
             const isActive = activeTab === idx;
             return (
               <button
-                key={m.id}
+                key={c.id}
                 type="button"
-                id={`machinery-tab-${m.id}`}
+                id={`machinery-tab-${c.id}`}
                 role="tab"
                 aria-selected={isActive}
-                aria-controls={`machinery-panel-${m.id}`}
+                aria-controls={`machinery-panel-${c.id}`}
                 tabIndex={isActive ? 0 : -1}
                 className={`machine-mini-card ${isActive ? 'active-mini' : ''}`}
                 onClick={() => setActiveTab(idx)}
                 onKeyDown={(e) => {
                   if (e.key === 'ArrowRight') {
                     e.preventDefault();
-                    setActiveTab((idx + 1) % machines.length);
+                    setActiveTab((idx + 1) % capabilities.length);
                   } else if (e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    setActiveTab((idx - 1 + machines.length) % machines.length);
+                    setActiveTab((idx - 1 + capabilities.length) % capabilities.length);
                   }
                 }}
               >
                 <div className="mini-card-thumb-wrap">
-                  <img src={m.image} alt={m.title} className="mini-card-thumb" loading="lazy" />
+                  <img src={c.image} alt={c.title} className="mini-card-thumb" loading="lazy" />
                   <span className="mini-card-overlay-btn" aria-hidden="true">
                     <Eye size={16} />
                   </span>
                 </div>
                 <div className="mini-card-content">
-                  <span className="mini-card-cat">{m.category}</span>
-                  <h4 className="mini-card-title">{m.title}</h4>
+                  <span className="mini-card-cat">{c.category}</span>
+                  <h4 className="mini-card-title">{c.title}</h4>
                 </div>
               </button>
             );
           })}
         </div>
 
-        {/* Featured Active Machine Display Card - Displays Directly Below the Selection Cards */}
+        {/* Featured Active Service Display Card */}
         <div
-          id={`machinery-panel-${machines[activeTab].id}`}
+          id={`machinery-panel-${capabilities[activeTab].id}`}
           role="tabpanel"
-          aria-labelledby={`machinery-tab-${machines[activeTab].id}`}
-          key={machines[activeTab].id}
+          aria-labelledby={`machinery-tab-${capabilities[activeTab].id}`}
+          key={capabilities[activeTab].id}
           className="machinery-featured-card"
         >
           <div className="machinery-image-col">
             <div className="machine-img-container">
               <img
-                src={machines[activeTab].image}
-                alt={machines[activeTab].title}
+                src={capabilities[activeTab].image}
+                alt={capabilities[activeTab].title}
                 className="machine-main-img"
                 loading="lazy"
               />
               <div className="machine-floating-badge">
                 <Zap size={14} className="zap-icon" />
-                <span>{machines[activeTab].badge}</span>
+                <span>{capabilities[activeTab].badge}</span>
               </div>
             </div>
           </div>
 
           <div className="machinery-info-col">
-            <div className="machine-category-label">{machines[activeTab].category}</div>
-            <h3 className="machine-display-name">{machines[activeTab].title}</h3>
-            <p className="machine-desc-text">{machines[activeTab].desc}</p>
+            <div className="machine-category-label">{capabilities[activeTab].category}</div>
+            <h3 className="machine-display-name">{capabilities[activeTab].title}</h3>
+            <p className="machine-desc-text">{capabilities[activeTab].desc}</p>
 
             <div className="machine-specs-box">
-              <div className="specs-box-title">Engineered Specifications:</div>
+              <div className="specs-box-title">Service Capabilities & Standards:</div>
               <ul className="machine-specs-list">
-                {machines[activeTab].specs.map((spec, sIdx) => (
+                {capabilities[activeTab].specs.map((spec, sIdx) => (
                   <li key={sIdx} className="machine-spec-item">
                     <CheckCircle2 size={16} className="spec-check-icon" />
                     <span>{spec}</span>
@@ -157,17 +163,17 @@ export const MachinerySection: React.FC<MachinerySectionProps> = ({ onOpenQuote 
 
             <div className="machine-ideal-box">
               <span className="ideal-label">Best Applications:</span>
-              <span className="ideal-text">{machines[activeTab].idealFor}</span>
+              <span className="ideal-text">{capabilities[activeTab].idealFor}</span>
             </div>
 
             <div className="machine-cta-row">
               <button
                 type="button"
-                onClick={() => onOpenQuote(machines[activeTab].title)}
+                onClick={() => onOpenQuote(capabilities[activeTab].quoteService || capabilities[activeTab].title)}
                 className="btn-yellow"
                 style={{ padding: '12px 24px' }}
               >
-                <span>Request Print Quote</span>
+                <span>{capabilities[activeTab].ctaText}</span>
                 <ArrowRight size={16} />
               </button>
             </div>

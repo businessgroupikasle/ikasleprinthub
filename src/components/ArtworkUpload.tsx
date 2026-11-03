@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Upload, Loader2 } from 'lucide-react';
 import { ARTWORK_ACCEPT, MAX_ARTWORK_MB, formatFileSize, validateArtworkFile } from '../utils/artwork';
+import { MAX_EMAIL_ATTACHMENT_BYTES } from '../utils/emailService';
 import { FieldError } from './FieldError';
 import './ArtworkUpload.css';
 
@@ -134,9 +135,15 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = ({ file, onChange }) 
         ) : file ? (
           <div>
             <div style={{ fontSize: '13px', fontWeight: 700, color: '#05264D', wordBreak: 'break-all' }}>{file.name}</div>
-            <div style={{ fontSize: '11.5px', color: '#2E7D32', marginTop: '2px' }}>
-              ✓ Attached · {formatFileSize(file.size)} · Ready for pre-flight
-            </div>
+            {file.size > MAX_EMAIL_ATTACHMENT_BYTES ? (
+              <div style={{ fontSize: '11.5px', color: '#B45309', marginTop: '2px' }}>
+                ✓ Selected · {formatFileSize(file.size)} · Over 3 MB, so please send it on WhatsApp after submitting
+              </div>
+            ) : (
+              <div style={{ fontSize: '11.5px', color: '#2E7D32', marginTop: '2px' }}>
+                ✓ Attached · {formatFileSize(file.size)} · Ready for pre-flight
+              </div>
+            )}
           </div>
         ) : (
           <div>

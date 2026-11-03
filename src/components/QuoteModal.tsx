@@ -49,7 +49,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   const [finish, setFinish] = useState('Soft-touch Matt Lamination');
   const [turnaround, setTurnaround] = useState('Standard (3-5 days)');
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
-  const [submittedArtwork, setSubmittedArtwork] = useState<{ name: string; size: number } | null>(null);
+  const [submittedArtwork, setSubmittedArtwork] = useState<{ name: string; size: number; attached: boolean } | null>(null);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -134,8 +134,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
         material,
         finish,
         turnaround,
-        artworkFile: artworkFile ? artworkFile.name : null,
-        artworkFileSize: artworkFile ? artworkFile.size : null,
+        artwork: artworkFile,
       });
 
       if (!response.success) {
@@ -146,7 +145,9 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
       setQuoteReference(ref);
       setSubmittedCustomer(cleanName);
-      setSubmittedArtwork(artworkFile ? { name: artworkFile.name, size: artworkFile.size } : null);
+      setSubmittedArtwork(
+        artworkFile ? { name: artworkFile.name, size: artworkFile.size, attached: Boolean(response.artworkAttached) } : null,
+      );
       try {
         const existing = JSON.parse(localStorage.getItem('printhub_quotes') || '[]');
         existing.unshift({
@@ -340,8 +341,16 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
                 <strong style={{ wordBreak: 'break-all' }}>
                   {submittedArtwork.name} ({formatFileSize(submittedArtwork.size)})
                 </strong>{' '}
-                was checked and is ready. Please send this file to us on WhatsApp or email, quoting{' '}
-                <strong>{quoteReference}</strong>, so our team can pre-flight it.
+                {submittedArtwork.attached ? (
+                  <>
+                    was attached to your request and sent to our team for pre-flight checks.
+                  </>
+                ) : (
+                  <>
+                    is too large to attach to the request. Please send this file to us on WhatsApp or email, quoting{' '}
+                    <strong>{quoteReference}</strong>, so our team can pre-flight it.
+                  </>
+                )}
               </div>
             )}
 

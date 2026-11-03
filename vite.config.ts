@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
+import quoteHandler from './api/quote.ts'
 
-function apiEmailServicePlugin(): Plugin {
+function apiEmailServicePlugin(fileEnv: Record<string, string>): Plugin {
   return {
     name: 'api-email-service-plugin',
     configureServer(server) {
@@ -33,30 +34,10 @@ function apiEmailServicePlugin(): Plugin {
           return;
         }
 
-        if (req.method === 'POST' && req.url === '/api/quote') {
-          let body = '';
-          req.on('data', (chunk) => {
-            body += chunk;
-          });
-          req.on('end', () => {
-            try {
-              const data = JSON.parse(body || '{}');
-              res.statusCode = 200;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(
-                JSON.stringify({
-                  success: true,
-                  message: 'Quote request registered and dispatched to businessgroupikasle@gmail.com',
-                  timestamp: new Date().toISOString(),
-                  data,
-                })
-              );
-            } catch {
-              res.statusCode = 400;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ success: false, message: 'Invalid payload' }));
-            }
-          });
+        // Same handler the Vercel serverless function uses - sends a real email over SMTP.
+        if (req.url === '/api/quote') {
+          // Real environment variables win over .env.local, like on Vercel.
+          void quoteHandler(req, res, { ...fileEnv, ...process.env });
           return;
         }
 
@@ -67,6 +48,11 @@ function apiEmailServicePlugin(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), apiEmailServicePlugin()],
+export default defineConfig(({ mode }) => {
+  // SMTP_USER / SMTP_PASS / MAIL_TO from .env.local, for the dev-server /api/quote handler only.
+  // Only SMTP_* and MAIL_* are read, and none carry the VITE_ prefix, so they never reach the browser.
+  const fileEnv = loadEnv(mode, process.cwd(), ['SMTP_', 'MAIL_']);
+  return {
+    plugins: [react(), apiEmailServicePlugin(fileEnv)],
+  };
 })
