@@ -48,20 +48,12 @@ export const SamplePackSection: React.FC<SamplePackSectionProps> = ({
             <div className="sample-pack-visual-inner">
               <img
                 src="/assets/images/sample_pack_mockup.png"
-                alt="Sample Packs - A4 paper, envelope, and luxury business card mockups."
+                alt="Sample Packs - A4 paper, envelope, and luxury business card mockups with official Ikasle Print Hub branding."
                 className="sample-pack-banner-img"
-                width={490}
-                height={298}
+                width={800}
+                height={450}
                 loading="lazy"
               />
-
-              {/* iKASLÉ Logo Brand Overlays on Stationery Items */}
-              <div className="stationery-ikasle-tag tag-a4" aria-hidden="true">
-                <img src="/assets/printhub-trimmed-navy.png" alt="iKASLÉ Print Hub" style={{ height: '14px', width: 'auto', display: 'block' }} />
-              </div>
-              <div className="stationery-ikasle-tag tag-card" aria-hidden="true">
-                <img src="/assets/printhub-trimmed-navy.png" alt="iKASLÉ Print Hub" style={{ height: '12px', width: 'auto', display: 'block' }} />
-              </div>
             </div>
           </div>
         </div>

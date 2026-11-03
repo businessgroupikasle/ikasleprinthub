@@ -2789,22 +2789,21 @@ section[id] {
   mask-image: linear-gradient(90deg, transparent 0%, #000 12%);
 }
 
-/* Reserves the photo's aspect ratio (298 / 490) as the panel's minimum height */
+/* Reserves the photo's aspect ratio (16:9) as the panel's minimum height */
 .sample-pack-visual::before {
   content: '';
   display: block;
-  padding-top: 60.82%;
+  padding-top: 56.25%;
 }
 
-/* The product shot keeps its aspect ratio, anchored bottom-right, so the iKASLÉ tags stay aligned
-   even when the copy column makes the card taller (extra width is clipped on the faded left edge) */
+/* The product shot keeps its aspect ratio, anchored bottom-right */
 .sample-pack-visual-inner {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   height: 100%;
-  aspect-ratio: 490 / 298;
+  aspect-ratio: 16 / 9;
 }
 
 .sample-pack-banner-img {
@@ -2812,18 +2811,6 @@ section[id] {
   height: 100%;
   display: block;
   object-fit: cover;
-}
-
-/* Blue brand wash (overlay blend): shifts the photo's neutral grey backdrop to navy-blue
-   while the white paper stays white */
-.sample-pack-visual-inner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #0A3266 0%, #216FA3 100%);
-  mix-blend-mode: overlay;
-  opacity: 0.8;
-  pointer-events: none;
 }
 
 /* iKASLÉ Brand Logo Overlays on Mockup Items */
