@@ -25,30 +25,12 @@ const STATUS_STEPS = [
   { below: Infinity, label: 'Fresh off the press' },
 ];
 
-const FONT_FAMILY = "'Outfit', 'Plus Jakarta Sans', sans-serif";
-
 type Phase = 'loading' | 'exiting' | 'done';
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** One CMYK "plate" of the wordmark. */
-const LogoPlate: React.FC<{ plate: 'c' | 'm' | 'y' | 'k'; fill: string }> = ({ plate, fill }) => (
-  <text
-    className={`ik-plate ik-plate-${plate}`}
-    x="2"
-    y="28"
-    fontFamily={FONT_FAMILY}
-    fontWeight="800"
-    fontSize="29"
-    letterSpacing="-0.5px"
-    fill={fill}
-  >
-    iKASLÉ
-  </text>
-);
 
 /** Corner registration mark, as seen on real press sheets. */
 const RegMark: React.FC<{ position: 'tl' | 'tr' | 'bl' | 'br' }> = ({ position }) => (
@@ -165,57 +147,21 @@ export const LoadingScreen: React.FC = () => {
       <RegMark position="br" />
 
       <div className="ik-loader-center">
-        {/* Logo: four CMYK plates sliding into register */}
-        <div className="ik-logo-stage" aria-hidden="true">
+        {/* Official iKASLÉ Print Hub Brand Logo */}
+        <div className="ik-logo-stage" aria-hidden="true" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '120px' }}>
           <span className="ik-logo-halo" />
-          <svg className="ik-logo" viewBox="-6 -4 182 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <clipPath id="ik-logo-clip">
-                <text x="2" y="28" fontFamily={FONT_FAMILY} fontWeight="800" fontSize="29" letterSpacing="-0.5px">
-                  iKASLÉ
-                </text>
-              </clipPath>
-              <linearGradient id="ik-foil" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#FFF000" stopOpacity="0" />
-                <stop offset="0.5" stopColor="#FFF000" stopOpacity="1" />
-                <stop offset="1" stopColor="#FFF000" stopOpacity="0" />
-              </linearGradient>
-              <radialGradient id="ik-spark-glow">
-                <stop offset="0" stopColor="#FFF000" stopOpacity="0.55" />
-                <stop offset="1" stopColor="#FFF000" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-
-            <g className="ik-plates">
-              <LogoPlate plate="c" fill="#00D2FF" />
-              <LogoPlate plate="m" fill="#E91E8C" />
-              <LogoPlate plate="y" fill="#FFF000" />
-              <LogoPlate plate="k" fill="#FFFFFF" />
-            </g>
-
-            {/* Gold-foil sheen, clipped to the letterforms */}
-            <g clipPath="url(#ik-logo-clip)">
-              <rect className="ik-foil" x="-50" y="-4" width="46" height="56" fill="url(#ik-foil)" />
-            </g>
-
-            {/* Sparkle */}
-            <g className="ik-spark">
-              <circle cx="125" cy="14" r="11" fill="url(#ik-spark-glow)" />
-              <path d="M 125 10 Q 128 14 132 14 Q 128 14 125 18 Q 122 14 118 14 Q 122 14 125 10 Z" fill="#FFF000" />
-              <circle cx="125" cy="14" r="1.2" fill="#05264D" />
-            </g>
-
-            {/* Tagline: "Print Hub" with flanking flourishes */}
-            <g className="ik-tagline">
-              <line className="ik-tag-line ik-tag-line-l" x1="8" y1="41" x2="38" y2="41" stroke="#FFF000" strokeWidth="1.5" strokeLinecap="round" />
-              <circle className="ik-tag-dot" cx="43" cy="41" r="1.5" fill="#FFF000" />
-              <text className="ik-tag-text" x="50" y="44" fontFamily={FONT_FAMILY} fontWeight="700" fontSize="11.5" letterSpacing="2.2px" fill="#FFF000">
-                Print Hub
-              </text>
-              <circle className="ik-tag-dot" cx="120" cy="41" r="1.5" fill="#FFF000" />
-              <line className="ik-tag-line ik-tag-line-r" x1="125" y1="41" x2="155" y2="41" stroke="#FFF000" strokeWidth="1.5" strokeLinecap="round" />
-            </g>
-          </svg>
+          <img
+            src="/assets/printhub.png"
+            alt="iKASLÉ Print Hub"
+            style={{
+              width: '240px',
+              height: 'auto',
+              display: 'block',
+              position: 'relative',
+              zIndex: 2,
+              filter: 'drop-shadow(0 0 18px rgba(255, 240, 0, 0.4))',
+            }}
+          />
         </div>
 
         {/* Progress meter */}

@@ -57,10 +57,10 @@ export const SamplePackSection: React.FC<SamplePackSectionProps> = ({
 
               {/* iKASLÉ Logo Brand Overlays on Stationery Items */}
               <div className="stationery-ikasle-tag tag-a4" aria-hidden="true">
-                <span className="brand-logo-text">iKASLÉ</span>
+                <img src="/assets/printhub-trimmed-navy.png" alt="iKASLÉ Print Hub" style={{ height: '14px', width: 'auto', display: 'block' }} />
               </div>
               <div className="stationery-ikasle-tag tag-card" aria-hidden="true">
-                <span className="brand-logo-text">iKASLÉ</span>
+                <img src="/assets/printhub-trimmed-navy.png" alt="iKASLÉ Print Hub" style={{ height: '12px', width: 'auto', display: 'block' }} />
               </div>
             </div>
           </div>
