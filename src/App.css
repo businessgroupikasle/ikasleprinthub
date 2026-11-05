@@ -2351,6 +2351,11 @@ section[id] {
   display: none;
 }
 
+/* Base mobile stage (hidden on desktop screens > 768px) */
+.curved-mobile-stage {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .curved-panorama-stage {
     height: 460px;
@@ -2372,32 +2377,181 @@ section[id] {
   }
 }
 
+/* Mobile & Tablet 3D Coverflow Stage (Screens <= 768px) */
 @media (max-width: 768px) {
   .curved-panorama-stage {
-    height: 420px;
+    display: none !important;
   }
-  .curved-cylinder-ring,
-  .curved-card-item {
-    width: 270px;
-    height: 230px;
+
+  .curved-mobile-stage {
+    display: block;
+    width: 100%;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    margin-top: 6px;
   }
-  .curved-card-img-box {
-    height: 100%;
+
+  .curved-mobile-viewport {
+    position: relative;
+    width: 100%;
+    height: 310px;
+    perspective: 900px;
+    perspective-origin: center center;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-y;
   }
-  .curved-card-meta {
-    padding: 20px 14px 14px;
-    gap: 3px;
+
+  .curved-mobile-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(270px, 80vw, 310px);
+    height: 250px;
+    margin-top: -125px;
+    margin-left: clamp(-155px, -40vw, -135px);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0B0F19;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 24px rgba(5, 38, 77, 0.12);
+    cursor: pointer;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.45s ease, 
+                filter 0.45s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.45s ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform, opacity;
   }
-  .curved-card-category {
-    font-size: 10px;
-    letter-spacing: 1px;
+
+  .curved-mobile-card.active {
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
+    opacity: 1;
+    z-index: 10;
+    border-color: #FFF000;
+    box-shadow: 0 18px 40px -4px rgba(5, 38, 77, 0.24), 0 4px 14px rgba(255, 240, 0, 0.15);
+    filter: none;
+    pointer-events: auto;
   }
-  .curved-card-title {
-    font-size: 14px;
+
+  .curved-mobile-card.active .curved-card-inspect-hint {
+    opacity: 1;
+    transform: translateY(0);
   }
-  .curved-card-specs {
-    font-size: 11px;
+
+  .curved-mobile-card.next {
+    transform: translate3d(calc(58% + 12px), 0, -85px) rotateY(-22deg) scale(0.86);
+    opacity: 0.65;
+    z-index: 8;
+    filter: brightness(0.85);
+    pointer-events: auto;
   }
+
+  .curved-mobile-card.prev {
+    transform: translate3d(calc(-58% - 12px), 0, -85px) rotateY(22deg) scale(0.86);
+    opacity: 0.65;
+    z-index: 8;
+    filter: brightness(0.85);
+    pointer-events: auto;
+  }
+
+  .curved-mobile-card.hidden-right {
+    transform: translate3d(calc(110% + 24px), 0, -170px) rotateY(-36deg) scale(0.7);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .curved-mobile-card.hidden-left {
+    transform: translate3d(calc(-110% - 24px), 0, -170px) rotateY(36deg) scale(0.7);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .curved-mobile-card.hidden-far {
+    transform: translate3d(0, 0, -240px) scale(0.5);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .curved-mobile-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .curved-mobile-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
+    color: #05264D;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(5, 38, 77, 0.08);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .curved-mobile-btn:active {
+    transform: scale(0.92);
+    background: #FFF000;
+    border-color: #FFF000;
+  }
+
+  .curved-mobile-counter {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #64748B;
+    letter-spacing: 0.5px;
+    min-width: 55px;
+    text-align: center;
+  }
+
+  .curved-mobile-counter strong {
+    font-size: 16px;
+    font-weight: 800;
+    color: #05264D;
+  }
+
+  .curved-mobile-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .curved-mobile-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .curved-mobile-dot.active {
+    width: 22px;
+    border-radius: 999px;
+    background: #216FA3;
+  }
+
   .curved-showcase-footer {
     flex-direction: column;
     text-align: center;
@@ -4079,7 +4233,7 @@ html, body, #root, .ikasle-app-wrapper {
   }
 
   .curved-panorama-stage {
-    height: 390px !important;
+    display: none !important;
   }
 
   .curved-showcase-actions {

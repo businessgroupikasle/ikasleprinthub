@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Eye } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PortfolioItem } from './FeaturedWorkSection';
 
 interface CurvedShowcaseSectionProps {
@@ -118,11 +118,18 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
   const dragStartXRef = useRef(0);
   const dragStartAngleRef = useRef(0);
 
+  // Mobile 3D Cover Flow State
+  const [mobileIndex, setMobileIndex] = useState(0);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const touchDeltaXRef = useRef(0);
+  const isSwipingRef = useRef(false);
+
   const totalCards = SHOWCASE_ITEMS.length; // 10 cards
   const angleStep = 360 / totalCards; // 36 deg per card
-  const radius = 620; // 3D cylinder ring radius giving crisp 1:1 pixel rendering at front
+  const radius = 620; // 3D cylinder ring radius for desktop
 
-  // Drag interaction to spin ring manually
+  // Drag interaction to spin ring manually on desktop
   const handlePointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
     setIsPaused(true);
@@ -143,6 +150,120 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
       (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
     }
   };
+
+  // Circular difference between card index and active mobile index
+  const getCardDiff = (index: number) => {
+    let diff = (index - mobileIndex) % totalCards;
+    if (diff > totalCards / 2) diff -= totalCards;
+    if (diff < -totalCards / 2) diff += totalCards;
+    return diff;
+  };
+
+  const getCardClass = (diff: number) => {
+    if (diff === 0) return 'active';
+    if (diff === 1) return 'next';
+    if (diff === -1) return 'prev';
+    if (diff === 2) return 'hidden-right';
+    if (diff === -2) return 'hidden-left';
+    return 'hidden-far';
+  };
+
+  const handlePrevMobile = () => {
+    setMobileIndex((prev) => (prev - 1 + totalCards) % totalCards);
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 4500);
+  };
+
+  const handleNextMobile = () => {
+    setMobileIndex((prev) => (prev + 1) % totalCards);
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 4500);
+  };
+
+  const handleCardClickMobile = (item: ShowcaseCard, diff: number) => {
+    if (diff === 0) {
+      onSelectPortfolio?.({
+        id: item.id,
+        title: item.title,
+        subtitle: item.category,
+        image: item.image,
+        specs: item.specs,
+        client: item.client,
+        turnaround: item.turnaround,
+      });
+    } else if (diff === 1) {
+      handleNextMobile();
+    } else if (diff === -1) {
+      handlePrevMobile();
+    }
+  };
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    touchDeltaXRef.current = 0;
+    isSwipingRef.current = true;
+    setIsPaused(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSwipingRef.current) return;
+    const deltaX = e.touches[0].clientX - touchStartXRef.current;
+    const deltaY = e.touches[0].clientY - touchStartYRef.current;
+    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaX) < 15) {
+      return;
+    }
+    touchDeltaXRef.current = deltaX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = touchDeltaXRef.current;
+    if (deltaX < -35) {
+      handleNextMobile();
+    } else if (deltaX > 35) {
+      handlePrevMobile();
+    } else {
+      setTimeout(() => setIsPaused(false), 4500);
+    }
+  };
+
+  // Mouse drag support for desktop simulation testing
+  const handleMouseDownMobile = (e: React.MouseEvent) => {
+    touchStartXRef.current = e.clientX;
+    touchDeltaXRef.current = 0;
+    isSwipingRef.current = true;
+    setIsPaused(true);
+  };
+
+  const handleMouseMoveMobile = (e: React.MouseEvent) => {
+    if (!isSwipingRef.current) return;
+    touchDeltaXRef.current = e.clientX - touchStartXRef.current;
+  };
+
+  const handleMouseUpMobile = () => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = touchDeltaXRef.current;
+    if (deltaX < -35) {
+      handleNextMobile();
+    } else if (deltaX > 35) {
+      handlePrevMobile();
+    } else {
+      setTimeout(() => setIsPaused(false), 4500);
+    }
+  };
+
+  // Auto-advance mobile 3D cards gently every 4.5s when not interacted
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setMobileIndex((prev) => (prev + 1) % totalCards);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [isPaused, totalCards]);
 
   return (
     <section id="curved-showcase" className="curved-showcase-section">
@@ -167,7 +288,7 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
         </div>
       </div>
 
-      {/* Full-Width 3D Curved Cylindrical Panorama Stage */}
+      {/* 1. Desktop 3D Curved Cylindrical Panorama Stage (Shown on screens > 768px) */}
       <div
         className="curved-panorama-stage"
         onMouseEnter={() => !isDragging && setIsPaused(true)}
@@ -243,6 +364,100 @@ export const CurvedShowcaseSection: React.FC<CurvedShowcaseSectionProps> = ({
 
         {/* Ambient Floor Reflection & Glow */}
         <div className="curved-panorama-floor-glow" />
+      </div>
+
+      {/* 2. Mobile Touch-Optimized 3D Coverflow Stage (Shown on screens <= 768px) */}
+      <div className="curved-mobile-stage">
+        <div
+          className="curved-mobile-viewport"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDownMobile}
+          onMouseMove={handleMouseMoveMobile}
+          onMouseUp={handleMouseUpMobile}
+          onMouseLeave={handleMouseUpMobile}
+        >
+          {SHOWCASE_ITEMS.map((item, index) => {
+            const diff = getCardDiff(index);
+            const cardState = getCardClass(diff);
+
+            return (
+              <div
+                key={item.id}
+                className={`curved-mobile-card ${cardState}`}
+                onClick={() => handleCardClickMobile(item, diff)}
+                aria-hidden={Math.abs(diff) > 1}
+              >
+                {/* Card Image */}
+                <div className="curved-card-img-box">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="curved-card-img"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                  <div className="curved-card-glass-sheen" />
+                  <div className="curved-card-inspect-hint">
+                    <Eye size={14} />
+                    <span>Quick View</span>
+                  </div>
+                </div>
+
+                {/* Card Bottom Meta Plate */}
+                <div className="curved-card-meta">
+                  <span className="curved-card-category">{item.category}</span>
+                  <h3 className="curved-card-title">{item.title}</h3>
+                  <p className="curved-card-specs">{item.specs}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile Navigation Controls */}
+        <div className="curved-mobile-controls">
+          <button
+            type="button"
+            className="curved-mobile-btn prev"
+            onClick={handlePrevMobile}
+            aria-label="Previous 3D item"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div className="curved-mobile-counter">
+            <strong>{String(mobileIndex + 1).padStart(2, '0')}</strong>
+            <span> / {String(totalCards).padStart(2, '0')}</span>
+          </div>
+
+          <button
+            type="button"
+            className="curved-mobile-btn next"
+            onClick={handleNextMobile}
+            aria-label="Next 3D item"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        {/* Mobile Dots Row */}
+        <div className="curved-mobile-dots">
+          {SHOWCASE_ITEMS.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={`curved-mobile-dot ${mobileIndex === idx ? 'active' : ''}`}
+              onClick={() => {
+                setMobileIndex(idx);
+                setIsPaused(true);
+                setTimeout(() => setIsPaused(false), 4500);
+              }}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
