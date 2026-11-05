@@ -82,6 +82,11 @@ body {
   background-color: var(--color-white);
 }
 
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 /* Avoid a white flash before React mounts and the loading screen appears */
 #root:empty {
   min-height: 100vh;

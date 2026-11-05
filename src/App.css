@@ -4320,4 +4320,33 @@ html, body, #root, .ikasle-app-wrapper {
   animation: spinSlow 0.9s linear infinite;
 }
 
+/* ==========================================================================
+   GLOBAL PARAGRAPH JUSTIFY ALIGNMENT
+   ========================================================================== */
+p,
+.section-desc-dark,
+.section-desc-light,
+.hero-description,
+.sample-pack-desc,
+.why-choose-sub,
+.why-card-desc,
+.service-card-desc,
+.workflow-subtext,
+.mobile-card-desc,
+.machinery-lead,
+.machine-desc-text,
+.testimonial-quote,
+.curved-showcase-subtitle,
+.seo-lead-text,
+.localities-sub,
+.faq-subtext,
+.legal-subtitle,
+.legal-section p,
+.faq-accordion-body,
+.blog-modal-body p {
+  text-align: justify !important;
+  text-justify: inter-word;
+}
+
+
 
