@@ -13,7 +13,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
     { label: 'About', href: '#about' },
     { label: 'Blog', href: '#blog' },
     { label: 'Contact', href: '#contact' },
-    { label: 'FAQ', href: '/faq' },
   ];
 
   const legalLinks = [
